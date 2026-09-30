@@ -1,0 +1,15 @@
+# Python 3.11+ (developed on 3.13). Install torch first with the CUDA index that matches your driver, e.g.
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128
+torch>=2.4
+numpy>=2.1
+scipy>=1.13
+msgpack>=1.0
+fastapi>=0.110
+uvicorn[standard]>=0.29
+websockets>=12
+tqdm
+matplotlib
+Pillow
+pytest>=8
+# NOTE: nuscenes-devkit is intentionally NOT required. It pins numpy<2 which breaks on Python 3.13.
+# The loader in avr_lidar/data/nuscenes_loader.py reads the metadata JSON directly.

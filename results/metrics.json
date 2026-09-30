@@ -1,0 +1,199 @@
+{
+ "split": "val",
+ "num_frames": 81,
+ "checkpoint_epoch": 59,
+ "device": "cuda",
+ "fps": {
+  "total": 24.3,
+  "inference": 52.9,
+  "projection": 88.3,
+  "encode": 461.1
+ },
+ "latency_ms": {
+  "range_proj": {
+   "mean": 7.986,
+   "p50": 7.884,
+   "p95": 9.047
+  },
+  "inference": {
+   "mean": 19.06,
+   "p50": 18.89,
+   "p95": 24.224
+  },
+  "unproject": {
+   "mean": 0.46,
+   "p50": 0.432,
+   "p95": 0.744
+  },
+  "projection": {
+   "mean": 11.417,
+   "p50": 11.322,
+   "p95": 12.792
+  },
+  "encode": {
+   "mean": 2.3,
+   "p50": 2.169,
+   "p95": 3.015
+  },
+  "total": {
+   "mean": 41.312,
+   "p50": 41.164,
+   "p95": 46.798
+  },
+  "p50": 41.16,
+  "p95": 46.8
+ },
+ "miou": 0.7466,
+ "point_accuracy": 0.8883,
+ "iou_per_class": {
+  "drivable": 0.8572,
+  "terrain_nondrivable": 0.5263,
+  "static_obstacle": 0.8724,
+  "dynamic_object": 0.7304
+ },
+ "accuracy_by_distance": {
+  "0-10": 0.9006,
+  "10-20": 0.8494,
+  "20-40": 0.8932,
+  "40-100": 0.9245
+ },
+ "accuracy_by_distance_per_class": {
+  "0-10": {
+   "drivable": 0.9249,
+   "terrain_nondrivable": 0.8083,
+   "static_obstacle": 0.804,
+   "dynamic_object": 0.9499
+  },
+  "10-20": {
+   "drivable": 0.8845,
+   "terrain_nondrivable": 0.593,
+   "static_obstacle": 0.8958,
+   "dynamic_object": 0.8617
+  },
+  "20-40": {
+   "drivable": 0.7003,
+   "terrain_nondrivable": 0.5825,
+   "static_obstacle": 0.9453,
+   "dynamic_object": 0.6833
+  },
+  "40-100": {
+   "drivable": 0.0457,
+   "terrain_nondrivable": 0.0531,
+   "static_obstacle": 0.983,
+   "dynamic_object": 0.4799
+  }
+ },
+ "points_by_distance": {
+  "0-10": 1130322,
+  "10-20": 524177,
+  "20-40": 295491,
+  "40-100": 141923
+ },
+ "cell_label_accuracy": 0.8723693644819436,
+ "cell_iou_per_class": {
+  "drivable": 0.844,
+  "terrain_nondrivable": 0.5257,
+  "static_obstacle": 0.8428,
+  "dynamic_object": 0.6951
+ },
+ "obstacle_cells_retained_within_10m": 0.9099,
+ "memory": {
+  "varres_bytes": 4275200,
+  "uniform_2d_5cm_bytes": 128000000,
+  "uniform_3d_5cm_bytes": 1920000000,
+  "reduction_2d": 29.9,
+  "reduction_3d": 449.1,
+  "wire_bytes_msgpack": 245467
+ },
+ "cells": {
+  "varres": 534400,
+  "uniform_2d_5cm": 16000000,
+  "occupied_mean": 17969
+ },
+ "points": {
+  "mean_per_frame": 34721,
+  "dropped_beyond_100m_mean": 0.89
+ },
+ "rings": [
+  {
+   "ring": 0,
+   "inner_m": 0.0,
+   "outer_m": 10.0,
+   "cell_m": 0.05,
+   "size": 400,
+   "inner_hole": 0,
+   "cells": 160000
+  },
+  {
+   "ring": 1,
+   "inner_m": 10.0,
+   "outer_m": 20.0,
+   "cell_m": 0.1,
+   "size": 400,
+   "inner_hole": 200,
+   "cells": 120000
+  },
+  {
+   "ring": 2,
+   "inner_m": 20.0,
+   "outer_m": 40.0,
+   "cell_m": 0.2,
+   "size": 400,
+   "inner_hole": 200,
+   "cells": 120000
+  },
+  {
+   "ring": 3,
+   "inner_m": 40.0,
+   "outer_m": 100.0,
+   "cell_m": 0.5,
+   "size": 400,
+   "inner_hole": 160,
+   "cells": 134400
+  }
+ ],
+ "class_names": [
+  "ignore",
+  "drivable",
+  "terrain_nondrivable",
+  "static_obstacle",
+  "dynamic_object"
+ ],
+ "confusion": [
+  [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   89,
+   828051,
+   66039,
+   4374,
+   8587
+  ],
+  [
+   0,
+   51942,
+   187343,
+   18346,
+   3107
+  ],
+  [
+   7,
+   4244,
+   26713,
+   675307,
+   30298
+  ],
+  [
+   1,
+   2651,
+   2460,
+   14798,
+   167744
+  ]
+ ]
+}

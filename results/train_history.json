@@ -1,0 +1,782 @@
+[
+ {
+  "epoch": 1,
+  "train_loss": 8.482124292850495,
+  "val_miou": 0.2421,
+  "val_acc": 0.3857,
+  "iou": {
+   "drivable": 0.217,
+   "terrain_nondrivable": 0.2212,
+   "static_obstacle": 0.4237,
+   "dynamic_object": 0.1066
+  },
+  "sec": 10.000907699999516
+ },
+ {
+  "epoch": 2,
+  "train_loss": 6.394833207130432,
+  "val_miou": 0.487,
+  "val_acc": 0.7353,
+  "iou": {
+   "drivable": 0.6834,
+   "terrain_nondrivable": 0.2913,
+   "static_obstacle": 0.7461,
+   "dynamic_object": 0.2269
+  },
+  "sec": 7.204843100000289
+ },
+ {
+  "epoch": 3,
+  "train_loss": 4.650616800785064,
+  "val_miou": 0.5127,
+  "val_acc": 0.7418,
+  "iou": {
+   "drivable": 0.7085,
+   "terrain_nondrivable": 0.2645,
+   "static_obstacle": 0.7369,
+   "dynamic_object": 0.3408
+  },
+  "sec": 7.560972499995842
+ },
+ {
+  "epoch": 4,
+  "train_loss": 3.970131587982178,
+  "val_miou": 0.4547,
+  "val_acc": 0.6838,
+  "iou": {
+   "drivable": 0.6305,
+   "terrain_nondrivable": 0.2181,
+   "static_obstacle": 0.6823,
+   "dynamic_object": 0.288
+  },
+  "sec": 7.207866000011563
+ },
+ {
+  "epoch": 5,
+  "train_loss": 3.3054530560970306,
+  "val_miou": 0.3514,
+  "val_acc": 0.5648,
+  "iou": {
+   "drivable": 0.327,
+   "terrain_nondrivable": 0.1023,
+   "static_obstacle": 0.614,
+   "dynamic_object": 0.3621
+  },
+  "sec": 7.285573999994085
+ },
+ {
+  "epoch": 6,
+  "train_loss": 2.8529857635498046,
+  "val_miou": 0.5677,
+  "val_acc": 0.7584,
+  "iou": {
+   "drivable": 0.6502,
+   "terrain_nondrivable": 0.3373,
+   "static_obstacle": 0.8099,
+   "dynamic_object": 0.4736
+  },
+  "sec": 7.218547500000568
+ },
+ {
+  "epoch": 7,
+  "train_loss": 2.4888107597827913,
+  "val_miou": 0.6266,
+  "val_acc": 0.8051,
+  "iou": {
+   "drivable": 0.7329,
+   "terrain_nondrivable": 0.3839,
+   "static_obstacle": 0.8182,
+   "dynamic_object": 0.5713
+  },
+  "sec": 7.162775100005092
+ },
+ {
+  "epoch": 8,
+  "train_loss": 2.2755586951971054,
+  "val_miou": 0.6185,
+  "val_acc": 0.8039,
+  "iou": {
+   "drivable": 0.7544,
+   "terrain_nondrivable": 0.38,
+   "static_obstacle": 0.7916,
+   "dynamic_object": 0.5479
+  },
+  "sec": 7.3332000999944285
+ },
+ {
+  "epoch": 9,
+  "train_loss": 2.1308467745780946,
+  "val_miou": 0.478,
+  "val_acc": 0.7023,
+  "iou": {
+   "drivable": 0.6439,
+   "terrain_nondrivable": 0.197,
+   "static_obstacle": 0.6511,
+   "dynamic_object": 0.42
+  },
+  "sec": 7.217204299988225
+ },
+ {
+  "epoch": 10,
+  "train_loss": 2.0848834842443464,
+  "val_miou": 0.5108,
+  "val_acc": 0.7402,
+  "iou": {
+   "drivable": 0.702,
+   "terrain_nondrivable": 0.2236,
+   "static_obstacle": 0.7626,
+   "dynamic_object": 0.3549
+  },
+  "sec": 7.204788199989707
+ },
+ {
+  "epoch": 11,
+  "train_loss": 1.8864925295114516,
+  "val_miou": 0.5423,
+  "val_acc": 0.7196,
+  "iou": {
+   "drivable": 0.5487,
+   "terrain_nondrivable": 0.3121,
+   "static_obstacle": 0.804,
+   "dynamic_object": 0.5044
+  },
+  "sec": 7.2472094999975525
+ },
+ {
+  "epoch": 12,
+  "train_loss": 1.7488858193159103,
+  "val_miou": 0.6738,
+  "val_acc": 0.8502,
+  "iou": {
+   "drivable": 0.8246,
+   "terrain_nondrivable": 0.3871,
+   "static_obstacle": 0.8283,
+   "dynamic_object": 0.6552
+  },
+  "sec": 7.193464800002403
+ },
+ {
+  "epoch": 13,
+  "train_loss": 1.648158723115921,
+  "val_miou": 0.439,
+  "val_acc": 0.667,
+  "iou": {
+   "drivable": 0.5518,
+   "terrain_nondrivable": 0.1683,
+   "static_obstacle": 0.6218,
+   "dynamic_object": 0.4141
+  },
+  "sec": 7.267753499996616
+ },
+ {
+  "epoch": 14,
+  "train_loss": 1.563079011440277,
+  "val_miou": 0.4121,
+  "val_acc": 0.642,
+  "iou": {
+   "drivable": 0.599,
+   "terrain_nondrivable": 0.1394,
+   "static_obstacle": 0.6085,
+   "dynamic_object": 0.3015
+  },
+  "sec": 7.19646289999946
+ },
+ {
+  "epoch": 15,
+  "train_loss": 1.4565146416425705,
+  "val_miou": 0.6672,
+  "val_acc": 0.8431,
+  "iou": {
+   "drivable": 0.8198,
+   "terrain_nondrivable": 0.3855,
+   "static_obstacle": 0.8126,
+   "dynamic_object": 0.6507
+  },
+  "sec": 7.125717200004146
+ },
+ {
+  "epoch": 16,
+  "train_loss": 1.4738828539848328,
+  "val_miou": 0.4498,
+  "val_acc": 0.6509,
+  "iou": {
+   "drivable": 0.5612,
+   "terrain_nondrivable": 0.2162,
+   "static_obstacle": 0.6415,
+   "dynamic_object": 0.3801
+  },
+  "sec": 7.017461200011894
+ },
+ {
+  "epoch": 17,
+  "train_loss": 1.3910975903272629,
+  "val_miou": 0.633,
+  "val_acc": 0.8292,
+  "iou": {
+   "drivable": 0.7956,
+   "terrain_nondrivable": 0.3064,
+   "static_obstacle": 0.8225,
+   "dynamic_object": 0.6075
+  },
+  "sec": 7.119016199998441
+ },
+ {
+  "epoch": 18,
+  "train_loss": 1.3355393424630164,
+  "val_miou": 0.6699,
+  "val_acc": 0.8424,
+  "iou": {
+   "drivable": 0.8138,
+   "terrain_nondrivable": 0.4196,
+   "static_obstacle": 0.8104,
+   "dynamic_object": 0.6358
+  },
+  "sec": 7.468303899993771
+ },
+ {
+  "epoch": 19,
+  "train_loss": 1.180445745587349,
+  "val_miou": 0.472,
+  "val_acc": 0.6884,
+  "iou": {
+   "drivable": 0.5544,
+   "terrain_nondrivable": 0.2051,
+   "static_obstacle": 0.7029,
+   "dynamic_object": 0.4258
+  },
+  "sec": 7.094166499999119
+ },
+ {
+  "epoch": 20,
+  "train_loss": 1.188225668668747,
+  "val_miou": 0.6579,
+  "val_acc": 0.835,
+  "iou": {
+   "drivable": 0.829,
+   "terrain_nondrivable": 0.3523,
+   "static_obstacle": 0.7963,
+   "dynamic_object": 0.654
+  },
+  "sec": 6.9394923000072595
+ },
+ {
+  "epoch": 21,
+  "train_loss": 1.198272056877613,
+  "val_miou": 0.6797,
+  "val_acc": 0.8371,
+  "iou": {
+   "drivable": 0.8062,
+   "terrain_nondrivable": 0.4169,
+   "static_obstacle": 0.8084,
+   "dynamic_object": 0.6872
+  },
+  "sec": 6.997593699998106
+ },
+ {
+  "epoch": 22,
+  "train_loss": 1.1541622772812843,
+  "val_miou": 0.6779,
+  "val_acc": 0.8471,
+  "iou": {
+   "drivable": 0.8036,
+   "terrain_nondrivable": 0.3825,
+   "static_obstacle": 0.8338,
+   "dynamic_object": 0.6918
+  },
+  "sec": 6.991101899999194
+ },
+ {
+  "epoch": 23,
+  "train_loss": 1.1317900568246841,
+  "val_miou": 0.7021,
+  "val_acc": 0.8658,
+  "iou": {
+   "drivable": 0.8363,
+   "terrain_nondrivable": 0.4334,
+   "static_obstacle": 0.8506,
+   "dynamic_object": 0.688
+  },
+  "sec": 7.080509799998254
+ },
+ {
+  "epoch": 24,
+  "train_loss": 1.069598001241684,
+  "val_miou": 0.6895,
+  "val_acc": 0.857,
+  "iou": {
+   "drivable": 0.8315,
+   "terrain_nondrivable": 0.4038,
+   "static_obstacle": 0.8308,
+   "dynamic_object": 0.6918
+  },
+  "sec": 7.048335199986468
+ },
+ {
+  "epoch": 25,
+  "train_loss": 0.9884354218840599,
+  "val_miou": 0.6023,
+  "val_acc": 0.8053,
+  "iou": {
+   "drivable": 0.785,
+   "terrain_nondrivable": 0.3188,
+   "static_obstacle": 0.7676,
+   "dynamic_object": 0.5376
+  },
+  "sec": 7.07917370001087
+ },
+ {
+  "epoch": 26,
+  "train_loss": 0.9426263943314552,
+  "val_miou": 0.6132,
+  "val_acc": 0.8048,
+  "iou": {
+   "drivable": 0.769,
+   "terrain_nondrivable": 0.3334,
+   "static_obstacle": 0.7641,
+   "dynamic_object": 0.5862
+  },
+  "sec": 7.205947299997206
+ },
+ {
+  "epoch": 27,
+  "train_loss": 0.9264876022934914,
+  "val_miou": 0.6712,
+  "val_acc": 0.8437,
+  "iou": {
+   "drivable": 0.8133,
+   "terrain_nondrivable": 0.4238,
+   "static_obstacle": 0.8097,
+   "dynamic_object": 0.6382
+  },
+  "sec": 7.128860800003167
+ },
+ {
+  "epoch": 28,
+  "train_loss": 0.8985493466258049,
+  "val_miou": 0.7105,
+  "val_acc": 0.8743,
+  "iou": {
+   "drivable": 0.8502,
+   "terrain_nondrivable": 0.433,
+   "static_obstacle": 0.8497,
+   "dynamic_object": 0.7089
+  },
+  "sec": 7.1163113999937195
+ },
+ {
+  "epoch": 29,
+  "train_loss": 0.906406868994236,
+  "val_miou": 0.6729,
+  "val_acc": 0.842,
+  "iou": {
+   "drivable": 0.793,
+   "terrain_nondrivable": 0.4189,
+   "static_obstacle": 0.8305,
+   "dynamic_object": 0.6492
+  },
+  "sec": 7.060509500006447
+ },
+ {
+  "epoch": 30,
+  "train_loss": 0.8749709397554397,
+  "val_miou": 0.7009,
+  "val_acc": 0.8647,
+  "iou": {
+   "drivable": 0.8495,
+   "terrain_nondrivable": 0.5216,
+   "static_obstacle": 0.823,
+   "dynamic_object": 0.6096
+  },
+  "sec": 7.17942720001156
+ },
+ {
+  "epoch": 31,
+  "train_loss": 0.8158914148807526,
+  "val_miou": 0.7061,
+  "val_acc": 0.8614,
+  "iou": {
+   "drivable": 0.8224,
+   "terrain_nondrivable": 0.4366,
+   "static_obstacle": 0.8473,
+   "dynamic_object": 0.7181
+  },
+  "sec": 7.062816199992085
+ },
+ {
+  "epoch": 32,
+  "train_loss": 0.784247349202633,
+  "val_miou": 0.6828,
+  "val_acc": 0.853,
+  "iou": {
+   "drivable": 0.839,
+   "terrain_nondrivable": 0.3978,
+   "static_obstacle": 0.8128,
+   "dynamic_object": 0.6818
+  },
+  "sec": 7.120169300003909
+ },
+ {
+  "epoch": 33,
+  "train_loss": 0.7581391409039497,
+  "val_miou": 0.6328,
+  "val_acc": 0.8219,
+  "iou": {
+   "drivable": 0.798,
+   "terrain_nondrivable": 0.3633,
+   "static_obstacle": 0.7727,
+   "dynamic_object": 0.5974
+  },
+  "sec": 7.114398399993661
+ },
+ {
+  "epoch": 34,
+  "train_loss": 0.7495856493711471,
+  "val_miou": 0.7166,
+  "val_acc": 0.8691,
+  "iou": {
+   "drivable": 0.8265,
+   "terrain_nondrivable": 0.4659,
+   "static_obstacle": 0.8622,
+   "dynamic_object": 0.7117
+  },
+  "sec": 7.140173499996308
+ },
+ {
+  "epoch": 35,
+  "train_loss": 0.7424131751060485,
+  "val_miou": 0.7073,
+  "val_acc": 0.8566,
+  "iou": {
+   "drivable": 0.805,
+   "terrain_nondrivable": 0.459,
+   "static_obstacle": 0.854,
+   "dynamic_object": 0.7112
+  },
+  "sec": 7.124700700005633
+ },
+ {
+  "epoch": 36,
+  "train_loss": 0.6764785766601562,
+  "val_miou": 0.7263,
+  "val_acc": 0.8782,
+  "iou": {
+   "drivable": 0.8471,
+   "terrain_nondrivable": 0.4847,
+   "static_obstacle": 0.8616,
+   "dynamic_object": 0.7117
+  },
+  "sec": 7.061088300004485
+ },
+ {
+  "epoch": 37,
+  "train_loss": 0.6717905208468438,
+  "val_miou": 0.7253,
+  "val_acc": 0.8755,
+  "iou": {
+   "drivable": 0.8466,
+   "terrain_nondrivable": 0.5075,
+   "static_obstacle": 0.8521,
+   "dynamic_object": 0.695
+  },
+  "sec": 7.00790360000974
+ },
+ {
+  "epoch": 38,
+  "train_loss": 0.6509148091077804,
+  "val_miou": 0.7279,
+  "val_acc": 0.8805,
+  "iou": {
+   "drivable": 0.8568,
+   "terrain_nondrivable": 0.4991,
+   "static_obstacle": 0.8554,
+   "dynamic_object": 0.7004
+  },
+  "sec": 7.025913799996488
+ },
+ {
+  "epoch": 39,
+  "train_loss": 0.6227021232247353,
+  "val_miou": 0.7196,
+  "val_acc": 0.8717,
+  "iou": {
+   "drivable": 0.8364,
+   "terrain_nondrivable": 0.4519,
+   "static_obstacle": 0.859,
+   "dynamic_object": 0.7311
+  },
+  "sec": 6.945080499994219
+ },
+ {
+  "epoch": 40,
+  "train_loss": 0.6170329429209233,
+  "val_miou": 0.7321,
+  "val_acc": 0.8789,
+  "iou": {
+   "drivable": 0.8469,
+   "terrain_nondrivable": 0.5022,
+   "static_obstacle": 0.8606,
+   "dynamic_object": 0.7189
+  },
+  "sec": 7.049506700001075
+ },
+ {
+  "epoch": 41,
+  "train_loss": 0.5956527180969715,
+  "val_miou": 0.7325,
+  "val_acc": 0.8798,
+  "iou": {
+   "drivable": 0.846,
+   "terrain_nondrivable": 0.5089,
+   "static_obstacle": 0.8637,
+   "dynamic_object": 0.7112
+  },
+  "sec": 7.0866232000116725
+ },
+ {
+  "epoch": 42,
+  "train_loss": 0.5804083548486233,
+  "val_miou": 0.7216,
+  "val_acc": 0.8729,
+  "iou": {
+   "drivable": 0.8364,
+   "terrain_nondrivable": 0.4983,
+   "static_obstacle": 0.8544,
+   "dynamic_object": 0.6972
+  },
+  "sec": 7.127716299990425
+ },
+ {
+  "epoch": 43,
+  "train_loss": 0.5861444771289825,
+  "val_miou": 0.7349,
+  "val_acc": 0.8813,
+  "iou": {
+   "drivable": 0.8512,
+   "terrain_nondrivable": 0.4959,
+   "static_obstacle": 0.8604,
+   "dynamic_object": 0.732
+  },
+  "sec": 7.084344000002602
+ },
+ {
+  "epoch": 44,
+  "train_loss": 0.552204480022192,
+  "val_miou": 0.7381,
+  "val_acc": 0.8841,
+  "iou": {
+   "drivable": 0.852,
+   "terrain_nondrivable": 0.5159,
+   "static_obstacle": 0.8677,
+   "dynamic_object": 0.7168
+  },
+  "sec": 7.091680100013036
+ },
+ {
+  "epoch": 45,
+  "train_loss": 0.5501778796315193,
+  "val_miou": 0.7193,
+  "val_acc": 0.8697,
+  "iou": {
+   "drivable": 0.8285,
+   "terrain_nondrivable": 0.492,
+   "static_obstacle": 0.8547,
+   "dynamic_object": 0.7021
+  },
+  "sec": 7.093792799991206
+ },
+ {
+  "epoch": 46,
+  "train_loss": 0.5357242055237293,
+  "val_miou": 0.7344,
+  "val_acc": 0.8816,
+  "iou": {
+   "drivable": 0.8531,
+   "terrain_nondrivable": 0.5176,
+   "static_obstacle": 0.8601,
+   "dynamic_object": 0.7066
+  },
+  "sec": 7.065696599995135
+ },
+ {
+  "epoch": 47,
+  "train_loss": 0.5330037422478199,
+  "val_miou": 0.7355,
+  "val_acc": 0.8832,
+  "iou": {
+   "drivable": 0.8602,
+   "terrain_nondrivable": 0.5265,
+   "static_obstacle": 0.856,
+   "dynamic_object": 0.6994
+  },
+  "sec": 15.139854200009722
+ },
+ {
+  "epoch": 48,
+  "train_loss": 0.5171422779560089,
+  "val_miou": 0.7275,
+  "val_acc": 0.8747,
+  "iou": {
+   "drivable": 0.8351,
+   "terrain_nondrivable": 0.5041,
+   "static_obstacle": 0.862,
+   "dynamic_object": 0.709
+  },
+  "sec": 24.31976389999909
+ },
+ {
+  "epoch": 49,
+  "train_loss": 0.511532249301672,
+  "val_miou": 0.7418,
+  "val_acc": 0.884,
+  "iou": {
+   "drivable": 0.8491,
+   "terrain_nondrivable": 0.5184,
+   "static_obstacle": 0.8717,
+   "dynamic_object": 0.728
+  },
+  "sec": 23.469977800006745
+ },
+ {
+  "epoch": 50,
+  "train_loss": 0.5071559064090252,
+  "val_miou": 0.7481,
+  "val_acc": 0.8888,
+  "iou": {
+   "drivable": 0.8581,
+   "terrain_nondrivable": 0.5237,
+   "static_obstacle": 0.8733,
+   "dynamic_object": 0.7375
+  },
+  "sec": 22.66357839999546
+ },
+ {
+  "epoch": 51,
+  "train_loss": 0.49474072828888893,
+  "val_miou": 0.7365,
+  "val_acc": 0.88,
+  "iou": {
+   "drivable": 0.84,
+   "terrain_nondrivable": 0.5083,
+   "static_obstacle": 0.8711,
+   "dynamic_object": 0.7268
+  },
+  "sec": 22.19059680000646
+ },
+ {
+  "epoch": 52,
+  "train_loss": 0.4971899077296257,
+  "val_miou": 0.7474,
+  "val_acc": 0.8872,
+  "iou": {
+   "drivable": 0.8551,
+   "terrain_nondrivable": 0.5249,
+   "static_obstacle": 0.8724,
+   "dynamic_object": 0.737
+  },
+  "sec": 21.791146999996272
+ },
+ {
+  "epoch": 53,
+  "train_loss": 0.48346866816282275,
+  "val_miou": 0.7449,
+  "val_acc": 0.8864,
+  "iou": {
+   "drivable": 0.856,
+   "terrain_nondrivable": 0.5257,
+   "static_obstacle": 0.8696,
+   "dynamic_object": 0.7284
+  },
+  "sec": 21.531671999997343
+ },
+ {
+  "epoch": 54,
+  "train_loss": 0.49185975790023806,
+  "val_miou": 0.7459,
+  "val_acc": 0.8873,
+  "iou": {
+   "drivable": 0.8554,
+   "terrain_nondrivable": 0.5247,
+   "static_obstacle": 0.8721,
+   "dynamic_object": 0.7312
+  },
+  "sec": 21.25385159999132
+ },
+ {
+  "epoch": 55,
+  "train_loss": 0.4896649017930031,
+  "val_miou": 0.7497,
+  "val_acc": 0.8889,
+  "iou": {
+   "drivable": 0.8572,
+   "terrain_nondrivable": 0.5299,
+   "static_obstacle": 0.8742,
+   "dynamic_object": 0.7377
+  },
+  "sec": 21.243270599996322
+ },
+ {
+  "epoch": 56,
+  "train_loss": 0.48693460077047346,
+  "val_miou": 0.7497,
+  "val_acc": 0.8897,
+  "iou": {
+   "drivable": 0.8594,
+   "terrain_nondrivable": 0.5285,
+   "static_obstacle": 0.8741,
+   "dynamic_object": 0.7367
+  },
+  "sec": 21.048107399998116
+ },
+ {
+  "epoch": 57,
+  "train_loss": 0.4815483383834362,
+  "val_miou": 0.7495,
+  "val_acc": 0.8882,
+  "iou": {
+   "drivable": 0.8542,
+   "terrain_nondrivable": 0.526,
+   "static_obstacle": 0.8759,
+   "dynamic_object": 0.7419
+  },
+  "sec": 20.932083499996224
+ },
+ {
+  "epoch": 58,
+  "train_loss": 0.4775603748857975,
+  "val_miou": 0.7486,
+  "val_acc": 0.8886,
+  "iou": {
+   "drivable": 0.857,
+   "terrain_nondrivable": 0.5269,
+   "static_obstacle": 0.874,
+   "dynamic_object": 0.7365
+  },
+  "sec": 20.741934499994386
+ },
+ {
+  "epoch": 59,
+  "train_loss": 0.4824058167636395,
+  "val_miou": 0.7509,
+  "val_acc": 0.89,
+  "iou": {
+   "drivable": 0.8584,
+   "terrain_nondrivable": 0.5287,
+   "static_obstacle": 0.8756,
+   "dynamic_object": 0.7408
+  },
+  "sec": 19.877661299993633
+ },
+ {
+  "epoch": 60,
+  "train_loss": 0.4860998399555683,
+  "val_miou": 0.7492,
+  "val_acc": 0.8882,
+  "iou": {
+   "drivable": 0.8543,
+   "terrain_nondrivable": 0.5257,
+   "static_obstacle": 0.876,
+   "dynamic_object": 0.7409
+  },
+  "sec": 7.075147800002014
+ }
+]

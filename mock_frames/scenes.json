@@ -1,0 +1,60 @@
+{
+ "scenes": [
+  {
+   "name": "scene-0061",
+   "description": "Parked truck, construction, intersection, turn left, following a van",
+   "num_frames": 39,
+   "split": "train",
+   "exported_indices": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38
+   ]
+  },
+  {
+   "name": "scene-0103",
+   "description": "Many peds right, wait for turning car, long bike rack left, cyclist",
+   "num_frames": 40,
+   "split": "val",
+   "exported_indices": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38
+   ]
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "names": [
+  "ignore",
+  "drivable",
+  "terrain_nondrivable",
+  "static_obstacle",
+  "dynamic_object"
+ ],
+ "colors": [
+  "#1a1a1a",
+  "#3b82f6",
+  "#22c55e",
+  "#a3a3a3",
+  "#ef4444"
+ ]
+}

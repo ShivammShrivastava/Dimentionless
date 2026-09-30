@@ -1,0 +1,41 @@
+{
+ "mode": "model",
+ "rings": [
+  {
+   "ring": 0,
+   "inner_m": 0.0,
+   "outer_m": 10.0,
+   "cell_m": 0.05,
+   "size": 400,
+   "inner_hole": 0,
+   "cells": 160000
+  },
+  {
+   "ring": 1,
+   "inner_m": 10.0,
+   "outer_m": 20.0,
+   "cell_m": 0.1,
+   "size": 400,
+   "inner_hole": 200,
+   "cells": 120000
+  },
+  {
+   "ring": 2,
+   "inner_m": 20.0,
+   "outer_m": 40.0,
+   "cell_m": 0.2,
+   "size": 400,
+   "inner_hole": 200,
+   "cells": 120000
+  },
+  {
+   "ring": 3,
+   "inner_m": 40.0,
+   "outer_m": 100.0,
+   "cell_m": 0.5,
+   "size": 400,
+   "inner_hole": 160,
+   "cells": 134400
+  }
+ ]
+}

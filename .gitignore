@@ -1,0 +1,52 @@
+# ---------- Dataset (4 GB, download separately) ----------
+data/
+*.tar
+*.pcd.bin
+*_lidarseg.bin
+
+# ---------- Training / benchmark outputs ----------
+results/*.pt
+results/*.pth
+results/*_log.txt
+results/*_err.txt
+results/server_log.txt
+results/smoke.pt
+results/verify_*.png
+# keep: results/metrics.json, results/train_history.json, results/fig_*.png
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# ---------- Frontend ----------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.local
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+frontend/coverage/
+npm-debug.log*
+yarn-error.log*
+
+# mock_frames/ and frontend/public/mock/ are tracked on purpose (8 MB demo data)
+
+# ---------- Editors / OS ----------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+
+# ---------- Claude Code local state ----------
+.claude/settings.local.json
