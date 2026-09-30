@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
-import Foveation from './components/Foveation'
-import Pipeline from './components/Pipeline'
 import LiveMap from './components/live/LiveMap'
 import Evidence from './components/Evidence'
+import Foveation from './components/Foveation'
+import Pipeline from './components/Pipeline'
 import Footer from './components/Footer'
 import { initApp } from './store/app'
 
@@ -18,10 +18,10 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Foveation />
-        <Pipeline />
         <LiveMap />
         <Evidence />
+        <Foveation />
+        <Pipeline />
       </main>
       <Footer />
     </>

@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useEffect, useRef } from 'react'
+import { drawCar } from '../lib/car'
 import { PALETTE_DEFAULT, hexToRgb } from '../lib/colors'
 import { useCountUp } from '../lib/useCountUp'
 import { useApp } from '../store/app'
@@ -201,10 +202,7 @@ function HeroCanvas() {
 
       // ego
       const [ex, ey] = toScreen(0, 0)
-      ctx.fillStyle = 'rgba(255,255,255,0.28)'
-      ctx.beginPath()
-      ctx.roundRect(ex - 0.95 * ppm, ey - 2.3 * ppm, 1.9 * ppm, 4.6 * ppm, 3)
-      ctx.fill()
+      drawCar(ctx, ex, ey, 4.6 * ppm, 1.9 * ppm, 0.55)
     }
     raf = requestAnimationFrame(draw)
     return () => {
@@ -253,7 +251,7 @@ export default function Hero() {
       <motion.div className="hero__content container" initial="hidden" animate="show" ref={ref}>
         <motion.a href="#live" className="badge" variants={fadeUp} custom={0}>
           <span className="badge__tag">LIVE</span>
-          Adaptive Variable-Resolution 2.5D Lidar Mapping
+          Adaptive 2.5D Lidar mapping
         </motion.a>
         <motion.h1 className="hero__title" variants={fadeUp} custom={1}>
           Sharp where it matters.
@@ -261,8 +259,7 @@ export default function Hero() {
           <em>Light</em> where it doesn&apos;t.
         </motion.h1>
         <motion.p className="hero__sub" variants={fadeUp} custom={2}>
-          A deep-learning pipeline that turns raw Lidar sweeps into a foveated 2.5D map: 5 cm cells around the vehicle, 50 cm cells at 100 m, with
-          drivable-surface, terrain, static-obstacle and dynamic-object layers. In real time, on a laptop GPU.
+          Lidar sweeps become a foveated 2.5D map: 5 cm cells near the car, 50 cm at 100 m, labelled in real time.
         </motion.p>
         <motion.div className="hero__cta" variants={fadeUp} custom={3}>
           <a className="btn btn--primary" href="#live">
@@ -271,14 +268,14 @@ export default function Hero() {
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </a>
-          <a className="btn btn--ghost" href="#pipeline">
-            How it works
+          <a className="btn btn--ghost" href="#evidence">
+            See the numbers
           </a>
         </motion.div>
         <motion.div className="hero__stats" variants={fadeUp} custom={4}>
-          <Stat value={fps} suffix="FPS" decimals={1} active={inView} label={<>end-to-end, <b>41 ms</b> median latency</>} />
-          <Stat value={red} suffix="× less memory" decimals={1} active={inView} label={<>than a uniform <b>5 cm</b> grid over 200 m × 200 m</>} />
-          <Stat value={miou} suffix="% mIoU" decimals={1} active={inView} label={<>on <b>unseen</b> nuScenes scenes, 4 classes</>} />
+          <Stat value={fps} suffix="FPS" decimals={1} active={inView} label={<><b>41 ms</b> end to end</>} />
+          <Stat value={red} suffix="×" decimals={1} active={inView} label={<>less memory than a <b>5 cm</b> grid</>} />
+          <Stat value={miou} suffix="%" decimals={1} active={inView} label={<>mIoU on <b>unseen</b> scenes</>} />
         </motion.div>
       </motion.div>
       <div className="scroll-hint" aria-hidden="true">

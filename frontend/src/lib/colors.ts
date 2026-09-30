@@ -2,10 +2,10 @@ export const CLASS_NAMES = ['ignore', 'drivable', 'terrain_nondrivable', 'static
 export const CLASS_LABELS = ['Empty', 'Drivable surface', 'Non-drivable terrain', 'Static obstacle', 'Dynamic object']
 export const CLASS_SHORT = ['Empty', 'Drivable', 'Terrain', 'Static', 'Dynamic']
 
-/** Default map palette: blue road, sand terrain, slate structure, coral dynamic. No green, no purple. */
-export const PALETTE_DEFAULT = ['#0F172A', '#3B82F6', '#E8B04B', '#9AA8BF', '#FF6B9D']
-/** Colour-blind safe alternative (Okabe-Ito derived). */
-export const PALETTE_CB = ['#0F172A', '#0072B2', '#E69F00', '#C9D1DB', '#D55E00']
+/** Map palette on warm graphite: stone road, amber terrain, white structure, coral dynamic. No blue, green or purple. */
+export const PALETTE_DEFAULT = ['#111113', '#A79F93', '#E3A63A', '#EDEDF0', '#FF6B9D']
+/** Colour-blind safe alternative (Okabe-Ito derived, still blue/green free). */
+export const PALETTE_CB = ['#111113', '#8C8C8C', '#E69F00', '#FFFFFF', '#D55E00']
 
 export type Rgb = [number, number, number]
 
@@ -29,9 +29,9 @@ export function shade(rgb: Rgb, f: number): Rgb {
 }
 
 export const STAGE_COLORS: Record<string, string> = {
-  range_proj: '#6FA8FF',
+  range_proj: '#E3A63A',
   inference: '#FF6B9D',
-  unproject: '#A9C4FF',
+  unproject: '#F0D8A0',
   projection: '#D4FC79',
-  encode: '#9AA8BF',
+  encode: '#9A9A9F',
 }

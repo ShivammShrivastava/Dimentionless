@@ -8,7 +8,7 @@ const ease = [0.16, 1, 0.3, 1] as const
 const STEPS = [
   {
     title: 'Range-view projection',
-    desc: 'Every sweep is unrolled into a 32 × 1024 range image. Rows come from the hardware beam index, so there are no elevation holes to interpolate.',
+    desc: 'Each sweep unrolled into a 32 × 1024 image, one row per beam.',
     meta: ['32 beams', '5 channels', 'nearest point wins'],
     icon: (
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#D4FC79" strokeWidth="1.5" strokeLinecap="round">
@@ -19,7 +19,7 @@ const STEPS = [
   },
   {
     title: 'Semantic segmentation',
-    desc: 'SalsaNext-lite, a 4.6 M-parameter U-Net with dilated residual blocks, labels every pixel as drivable, terrain, static obstacle or dynamic object.',
+    desc: 'A 4.6 M-parameter U-Net labels every pixel: drivable, terrain, static, dynamic.',
     meta: ['FP16', '4.57 M params', 'mIoU 0.747'],
     icon: (
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FF6B9D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -30,7 +30,7 @@ const STEPS = [
   },
   {
     title: 'Variable-resolution grid engine',
-    desc: 'Square Chebyshev rings mean a cell never straddles a boundary. One vectorised scatter builds height, class and confidence layers for all four rings.',
+    desc: 'Square rings, one vectorised scatter: height, class and confidence per cell.',
     meta: ['4 rings', '534,400 cells', 'zero point loss'],
     icon: (
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#D4FC79" strokeWidth="1.5">
@@ -42,7 +42,7 @@ const STEPS = [
   },
   {
     title: '2.5D map, streamed',
-    desc: 'Only occupied cells leave the server: about 18 k of 534 k. A frame is 245 KB of sparse msgpack over a WebSocket, densified again in the browser.',
+    desc: 'Only occupied cells travel: 18 k of 534 k, 245 KB per frame.',
     meta: ['sparse msgpack', '245 KB / frame', 'WebSocket'],
     icon: (
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#9AA8BF" strokeWidth="1.5" strokeLinecap="round">
@@ -77,7 +77,7 @@ export default function Pipeline() {
           <h2 className="h2">
             From 35,000 points to a 2.5D map in <em>{total.toFixed(0)} ms</em>
           </h2>
-          <p className="lead">Four stages, each timed with GPU synchronisation. Hover a stage below to see where the milliseconds go.</p>
+          <p className="lead">Four stages, timed on the GPU. Hover a segment to see where the milliseconds go.</p>
         </motion.div>
 
         <div className="pipe">
@@ -105,7 +105,7 @@ export default function Pipeline() {
 
         <motion.div
           className="card"
-          style={{ marginTop: 28, padding: '22px 24px', background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)', boxShadow: 'none' }}
+          style={{ marginTop: 28, padding: '22px 24px' }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}

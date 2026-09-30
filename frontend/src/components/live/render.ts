@@ -6,6 +6,7 @@
 import type { DenseRing, GridFrame } from '../../lib/decode'
 import { PALETTE_CB, PALETTE_DEFAULT, heightFactor, paletteRgb, type Rgb } from '../../lib/colors'
 import { CELL_LABELS, type RingSpec } from '../../lib/grid'
+import { drawCar } from '../../lib/car'
 
 export interface View {
   scale: number // px per metre
@@ -281,25 +282,10 @@ export function drawRingOutlines(ctx: CanvasRenderingContext2D, v: View, rings: 
 }
 
 export function drawEgo(ctx: CanvasRenderingContext2D, v: View) {
-  const L = Math.max(10, 4.6 * v.scale)
-  const W = Math.max(5, 1.9 * v.scale)
-  ctx.save()
-  ctx.translate(v.cx, v.cy)
-  ctx.fillStyle = 'rgba(255,255,255,0.95)'
-  ctx.strokeStyle = 'rgba(15,23,42,0.9)'
-  ctx.lineWidth = 1.5
-  ctx.beginPath()
-  ctx.roundRect(-W / 2, -L * 0.55, W, L, Math.min(4, W / 3))
-  ctx.fill()
-  ctx.stroke()
-  ctx.fillStyle = '#FF6B9D'
-  ctx.beginPath()
-  ctx.moveTo(0, -L * 0.55 - 8)
-  ctx.lineTo(-6, -L * 0.55 + 1)
-  ctx.lineTo(6, -L * 0.55 + 1)
-  ctx.closePath()
-  ctx.fill()
-  ctx.restore()
+  // nuScenes ego: lidar sits ~0.9 m behind the front axle; draw the body centred slightly behind the origin
+  const L = Math.max(14, 4.6 * v.scale)
+  const W = Math.max(7, 1.9 * v.scale)
+  drawCar(ctx, v.cx, v.cy + L * 0.05, L, W)
 }
 
 export function drawSweep(ctx: CanvasRenderingContext2D, v: View, theta: number, w: number, h: number) {

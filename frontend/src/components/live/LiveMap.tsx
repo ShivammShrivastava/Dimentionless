@@ -85,10 +85,7 @@ export default function LiveMap() {
           <h2 className="h2">
             The 2.5D map, <em>streaming</em>.
           </h2>
-          <p className="lead">
-            Every frame is one Lidar sweep: segmented, projected into the four rings and sent as sparse cells. Pan, zoom, hover any cell, switch to the 3D columns, or put the adaptive map next to a
-            uniform grid with the same memory budget.
-          </p>
+          <p className="lead">One sweep per frame. Pan, zoom, hover a cell, or switch views.</p>
         </motion.div>
 
         <motion.div className="dash" initial={{ opacity: 0, y: 40, scale: 0.985 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 1, ease }}>

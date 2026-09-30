@@ -104,7 +104,7 @@ export default function Rail() {
           <label>Frame rate</label>
           <div className="segmented" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'var(--line-dark)' }}>
             {[2, 5, 10, 20].map(f => (
-              <button key={f} className={player?.fps === f ? 'is-active' : ''} style={{ color: player?.fps === f ? '#0F172A' : 'rgba(233,238,248,0.5)', padding: '5px 9px' }} onClick={() => actions.setFps(f)}>
+              <button key={f} className={player?.fps === f ? 'is-active' : ''} style={{ color: player?.fps === f ? '#15190A' : 'rgba(233,238,248,0.5)', padding: '5px 9px' }} onClick={() => actions.setFps(f)}>
                 {player?.fps === f && <motion.span layoutId="fps-seg" className="seg-bg" style={{ background: '#D4FC79', boxShadow: 'none' }} transition={{ type: 'spring', stiffness: 420, damping: 34 }} />}
                 <span>{f}</span>
               </button>
@@ -151,7 +151,7 @@ export default function Rail() {
                   [SAME_BUDGET_CELL_M, 'same memory'],
                   [0.5, '50 cm'],
                 ].map(([c, l]) => (
-                  <button key={l as string} className={settings.compareCell === c ? 'is-active' : ''} style={{ color: settings.compareCell === c ? '#0F172A' : 'rgba(233,238,248,0.5)', padding: '5px 9px' }} onClick={() => actions.setSettings({ compareCell: c as number })}>
+                  <button key={l as string} className={settings.compareCell === c ? 'is-active' : ''} style={{ color: settings.compareCell === c ? '#15190A' : 'rgba(233,238,248,0.5)', padding: '5px 9px' }} onClick={() => actions.setSettings({ compareCell: c as number })}>
                     {settings.compareCell === c && <motion.span layoutId="cmp-seg" className="seg-bg" style={{ background: '#D4FC79', boxShadow: 'none' }} transition={{ type: 'spring', stiffness: 420, damping: 34 }} />}
                     <span>{l}</span>
                   </button>

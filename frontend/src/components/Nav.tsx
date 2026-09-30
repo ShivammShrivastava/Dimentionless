@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
 import { actions, useApp } from '../store/app'
 
 export function Logo({ size = 22 }: { size?: number }) {
@@ -14,46 +13,23 @@ export function Logo({ size = 22 }: { size?: number }) {
 
 const LINKS = [
   ['Overview', '#top'],
-  ['Foveation', '#foveation'],
-  ['Pipeline', '#pipeline'],
   ['Live map', '#live'],
   ['Evidence', '#evidence'],
+  ['Foveation', '#foveation'],
+  ['Pipeline', '#pipeline'],
 ]
 
 export default function Nav() {
   const mode = useApp(s => s.mode)
   const ws = useApp(s => s.wsStatus)
   const device = useApp(s => s.health?.device)
-  const [light, setLight] = useState(false)
-
-  useEffect(() => {
-    const sections = () => Array.from(document.querySelectorAll<HTMLElement>('[data-theme]'))
-    const onScroll = () => {
-      const y = 44
-      const hit = sections().find(el => {
-        const r = el.getBoundingClientRect()
-        return r.top <= y && r.bottom > y
-      })
-      setLight(hit?.dataset.theme === 'light')
-    }
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   const dot = mode === 'connecting' ? 'dot--connecting' : mode === 'live' ? (ws === 'open' ? 'dot--live' : 'dot--connecting') : 'dot--mock'
-  const label =
-    mode === 'connecting'
-      ? 'Connecting'
-      : mode === 'live'
-        ? ws === 'open'
-          ? `Live · ${device ?? 'gpu'}`
-          : 'Reconnecting'
-        : 'Offline demo'
+  const label = mode === 'connecting' ? 'Connecting' : mode === 'live' ? (ws === 'open' ? `Live · ${device ?? 'gpu'}` : 'Reconnecting') : 'Precomputed'
 
   return (
     <motion.header className="nav" initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
-      <div className={`nav__pill ${light ? 'is-light' : ''}`}>
+      <div className="nav__pill">
         <a className="nav__brand" href="#top">
           <Logo />
           <span>Foveated Lidar</span>
@@ -65,7 +41,7 @@ export default function Nav() {
             </a>
           ))}
         </nav>
-        <div className="status" title={mode === 'live' ? 'Streaming from the FastAPI backend' : 'Playing exported frames from public/mock'}>
+        <div className="status" title={mode === 'live' ? 'Streaming from the backend' : 'Playing precomputed GPU results'}>
           <span className={`dot ${dot}`} />
           <span>{label}</span>
           {mode === 'mock' && <button onClick={actions.retry}>retry</button>}

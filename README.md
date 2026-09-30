@@ -92,7 +92,7 @@ cd frontend; npm install; npm run dev                                         # 
 
 - `VITE_API_URL` (default `http://127.0.0.1:8000`), `VITE_MOCK=true` forces demo mode.
 - `npm run test` (grid maths + sparse decoder, incl. a real exported frame), `npm run build` (type-check + bundle).
-- Sections: hero with a procedural lidar sweep, foveation explainer with a true-cell-size lens, pipeline latency,
-  live map (top-down canvas, 3D elevation columns, uniform-vs-adaptive comparison at equal memory), evidence charts.
-- Palette: navy #0F172A, coral #FF6B9D, lime #D4FC79, light blue #EFF6FF, dark navy #1E293B.
-  Map classes: drivable blue, terrain sand, static slate, dynamic coral (no green/purple by design).
+- Sections, in order: overview (hero with a procedural lidar sweep), live map (top-down canvas, 3D elevation columns,
+  uniform-vs-adaptive comparison at equal memory), evidence charts, foveation explainer with a true-cell-size lens, pipeline latency.
+- Palette: warm graphite #111113 / #17171A surfaces, coral #FF6B9D, lime #D4FC79, warm white text #F2EFE9.
+  Map classes: drivable stone, terrain amber, static white, dynamic coral (no blue, green or purple by design).

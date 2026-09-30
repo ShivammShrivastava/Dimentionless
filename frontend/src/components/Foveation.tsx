@@ -112,7 +112,7 @@ function LensCanvas({ dist, onDist }: { dist: number; onDist: (d: number, fromMo
       ctx.beginPath()
       ctx.arc(lx, ly, R, 0, Math.PI * 2)
       ctx.clip()
-      ctx.fillStyle = '#0B1223'
+      ctx.fillStyle = '#0D0D0F'
       ctx.fillRect(lx - R, ly - R, 2 * R, 2 * R)
       const cellsAcross = Math.ceil(windowM / cell) + 2
       const x0 = Math.floor((p.x - windowM / 2) / cell)
@@ -224,20 +224,17 @@ export default function Foveation() {
       <div className="container grid-2">
         <div>
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.8, ease }}>
-            <span className="eyebrow">Why foveation</span>
+            <span className="eyebrow">Foveation</span>
             <h2 className="h2">
-              Resolution that follows <em>distance</em>, like your own eyes.
+              Resolution that follows <em>distance</em>.
             </h2>
-            <p className="lead">
-              A full 3D point cloud is too heavy to process every frame, and a flat 2D occupancy grid throws away the height that tells a curb from a road. The map here keeps both
-              in balance: 5 cm cells within 10 m for safety, 50 cm cells out to 100 m for range, with an elevation column and a semantic label in every cell.
-            </p>
+            <p className="lead">Fine cells where safety needs them, coarse cells where range needs them. Every cell keeps a height and a label.</p>
           </motion.div>
           <motion.ul className="list" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}>
             {[
-              ['Terrain analysis', 'Drivable surface versus non-drivable terrain, per cell, with a confidence score from the majority vote.'],
-              ['Object detection', 'Static obstacles such as walls, poles and vegetation, and dynamic objects such as pedestrians and vehicles, in coral.'],
-              ['Adaptive spatial representation', 'Four square rings keyed on Chebyshev distance. Boundaries are multiples of every cell size, so nothing straddles or is lost.'],
+              ['Terrain analysis', 'Drivable versus non-drivable, with confidence.'],
+              ['Object detection', 'Static structure in white, moving objects in coral.'],
+              ['Adaptive grid', 'Four square rings. No cell straddles a boundary.'],
             ].map(([t, d], i) => (
               <motion.li key={t} variants={{ hidden: { opacity: 0, x: -18 }, show: { opacity: 1, x: 0, transition: { duration: 0.6, ease } } }}>
                 <span className="list__num">{i + 1}</span>
@@ -254,7 +251,7 @@ export default function Foveation() {
           <div className="fov__canvas-wrap">
             <LensCanvas dist={dist} onDist={d => setDist(d)} />
             <div className="fov__tip">
-              Move over the map or drag the slider · lens shows <b>true cell size</b>
+              Hover or drag · lens shows <b>true cell size</b>
             </div>
           </div>
           <div className="fov__controls">

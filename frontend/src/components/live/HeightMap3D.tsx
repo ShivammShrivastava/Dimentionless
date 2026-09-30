@@ -36,8 +36,8 @@ export default function HeightMap3D() {
     el.appendChild(renderer.domElement)
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0b1223)
-    scene.fog = new THREE.Fog(0x0b1223, 90, 260)
+    scene.background = new THREE.Color(0x0d0d0f)
+    scene.fog = new THREE.Fog(0x0d0d0f, 90, 260)
 
     const camera = new THREE.PerspectiveCamera(50, el.clientWidth / Math.max(1, el.clientHeight), 0.1, 600)
     camera.position.set(0, 95, 130)
@@ -54,7 +54,7 @@ export default function HeightMap3D() {
     sun.position.set(30, 60, 20)
     scene.add(sun)
 
-    const grid = new THREE.GridHelper(200, 40, 0x1b2748, 0x162039)
+    const grid = new THREE.GridHelper(200, 40, 0x2a2a30, 0x1c1c20)
     grid.position.y = -0.02
     scene.add(grid)
 
@@ -68,7 +68,7 @@ export default function HeightMap3D() {
     })
 
     // ego
-    const ego = new THREE.Mesh(new THREE.BoxGeometry(1.9, 1.3, 4.6), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x334155, roughness: 0.4 }))
+    const ego = new THREE.Mesh(new THREE.BoxGeometry(1.9, 1.3, 4.6), new THREE.MeshStandardMaterial({ color: 0xf4f1ea, emissive: 0x3a3a40, roughness: 0.4 }))
     ego.position.set(0, 0.65, 0)
     scene.add(ego)
     const nose = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.4, 4), new THREE.MeshStandardMaterial({ color: 0xff6b9d, emissive: 0xff6b9d, emissiveIntensity: 0.5 }))

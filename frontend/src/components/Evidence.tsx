@@ -58,7 +58,7 @@ function AccuracyChart({ acc, accClass }: { acc: Record<string, number>; accClas
   const groupW = plotW / BANDS.length
   const series = ['all', ...CLASS_NAMES.slice(1)]
   const barW = (groupW * 0.72) / series.length
-  const color = (k: string) => (k === 'all' ? '#1E293B' : PALETTE_DEFAULT[CLASS_NAMES.indexOf(k as never)])
+  const color = (k: string) => (k === 'all' ? '#D4FC79' : PALETTE_DEFAULT[CLASS_NAMES.indexOf(k as never)])
   const y = (v: number) => padT + plotH * (1 - v)
 
   return (
@@ -66,7 +66,7 @@ function AccuracyChart({ acc, accClass }: { acc: Record<string, number>; accClas
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Point accuracy by distance band and class">
         {[0, 0.25, 0.5, 0.75, 1].map(t => (
           <g key={t}>
-            <line x1={padL} x2={W - 16} y1={y(t)} y2={y(t)} stroke="rgba(30,41,59,0.08)" />
+            <line x1={padL} x2={W - 16} y1={y(t)} y2={y(t)} stroke="rgba(255,255,255,0.08)" />
             <text x={padL - 8} y={y(t) + 4} textAnchor="end" className="axis">
               {Math.round(t * 100)}%
             </text>
@@ -146,7 +146,7 @@ export default function Evidence() {
   const memRows: [string, number, string][] = [
     ['Adaptive 2.5D map', mem.varres, '#FF6B9D'],
     ['Uniform 2D · 5 cm', mem.u2d, '#9AA8BF'],
-    ['Uniform 3D · 5 cm voxels', mem.u3d, '#1E293B'],
+    ['Uniform 3D · 5 cm voxels', mem.u3d, '#6E6E74'],
   ]
   const lo = Math.log10(mem.varres) - 0.35
   const hi = Math.log10(mem.u3d)
@@ -157,12 +157,9 @@ export default function Evidence() {
         <motion.div className="section__head" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.8, ease }}>
           <span className="eyebrow">Evidence</span>
           <h2 className="h2">
-            Measured on <em>{frames} unseen frames</em>, not on the training set.
+            Measured on <em>{frames} unseen frames</em>.
           </h2>
-          <p className="lead">
-            Every number below comes from the benchmark script over the nuScenes-mini validation scenes: latency with GPU synchronisation, accuracy against the human lidarseg labels, memory
-            from the actual bytes stored.
-          </p>
+          <p className="lead">Latency, accuracy and memory from the benchmark run, not estimates.</p>
         </motion.div>
 
         <div className="charts">
@@ -170,7 +167,7 @@ export default function Evidence() {
             <div className="chart__head">
               <div>
                 <div className="chart__title">Accuracy across distance</div>
-                <div className="chart__sub">Point-level accuracy per distance band, with the cell size that band is stored at. Dynamic objects fall off fastest, which is why the far rings can afford coarse cells.</div>
+                <div className="chart__sub">Per distance band and class. Far rings can afford coarse cells.</div>
               </div>
               <span className="callout">{(acc['0-10'] * 100).toFixed(0)}% within 10 m</span>
             </div>
@@ -181,7 +178,7 @@ export default function Evidence() {
             <div className="chart__head">
               <div>
                 <div className="chart__title">Segmentation quality</div>
-                <div className="chart__sub">Intersection over union per class, SalsaNext-lite, validation split.</div>
+                <div className="chart__sub">IoU per class, validation split.</div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div className="chart__big num">{(miou * 100).toFixed(1)}%</div>
@@ -207,17 +204,17 @@ export default function Evidence() {
                   </g>
                 )
               })}
-              <line x1={14} x2={406} y1={150.5} y2={150.5} stroke="rgba(30,41,59,0.15)" />
+              <line x1={14} x2={406} y1={150.5} y2={150.5} stroke="rgba(255,255,255,0.15)" />
             </svg>
             <div className="kpis" style={{ marginTop: 14 }}>
-              <div className="kpi" style={{ background: 'var(--sky)', borderColor: 'var(--line-light)' }}>
+              <div className="kpi kpi--flat">
                 <div className="kpi__v num" style={{ color: 'var(--ink)' }}>
                   {(cellAcc * 100).toFixed(1)}
                   <small style={{ color: 'var(--ink-3)' }}>%</small>
                 </div>
                 <div className="kpi__l" style={{ color: 'var(--ink-2)' }}>cell label accuracy after majority vote</div>
               </div>
-              <div className="kpi" style={{ background: 'var(--sky)', borderColor: 'var(--line-light)' }}>
+              <div className="kpi kpi--flat">
                 <div className="kpi__v num" style={{ color: 'var(--ink)' }}>
                   {(retained * 100).toFixed(0)}
                   <small style={{ color: 'var(--ink-3)' }}>%</small>
@@ -231,14 +228,14 @@ export default function Evidence() {
             <div className="chart__head">
               <div>
                 <div className="chart__title">Latency</div>
-                <div className="chart__sub">Median per stage, end to end, on an RTX 5060 Laptop GPU. Hover a segment.</div>
+                <div className="chart__sub">Median per stage on a laptop GPU. Hover a segment.</div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div className="chart__big num">{fps.toFixed(1)}</div>
                 <div className="chart__sub">frames per second</div>
               </div>
             </div>
-            <div className="stack" style={{ height: 22, marginTop: 22, background: 'rgba(30,41,59,0.08)' }}>
+            <div className="stack" style={{ height: 22, marginTop: 22, background: 'rgba(255,255,255,0.08)' }}>
               {Object.entries(stages).map(([k, v], i) => (
                 <motion.div
                   key={k}
@@ -268,7 +265,7 @@ export default function Evidence() {
                 [totalStage.toFixed(1), 'ms', 'sum of stage medians'],
                 [fmtInt(D.points), 'pts', 'points per sweep'],
               ].map(([v, u, l]) => (
-                <div key={l} className="kpi" style={{ background: 'var(--sky)', borderColor: 'var(--line-light)' }}>
+                <div key={l} className="kpi kpi--flat">
                   <div className="kpi__v num" style={{ color: 'var(--ink)' }}>
                     {v}
                     <small style={{ color: 'var(--ink-3)' }}>{u}</small>
@@ -283,7 +280,7 @@ export default function Evidence() {
             <div className="chart__head">
               <div>
                 <div className="chart__title">Memory for the same 200 m × 200 m map</div>
-                <div className="chart__sub">Bytes per frame, log scale. The adaptive map stores {fmtInt(cells.varres)} cells; a uniform 5 cm grid needs {fmtInt(cells.u2d)}.</div>
+                <div className="chart__sub">Bytes per frame, log scale. {fmtInt(cells.varres)} cells versus {fmtInt(cells.u2d)}.</div>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <span className="callout">{mem.r2d.toFixed(1)}× less than 2D</span>
