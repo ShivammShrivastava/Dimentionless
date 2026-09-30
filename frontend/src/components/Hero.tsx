@@ -1,8 +1,7 @@
-import { motion, useInView } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { drawCar } from '../lib/car'
 import { PALETTE_DEFAULT, hexToRgb } from '../lib/colors'
-import { useCountUp } from '../lib/useCountUp'
 import { useApp } from '../store/app'
 
 /* ------------------------------------------------------------------ canvas */
@@ -223,64 +222,92 @@ const fadeUp = {
   show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.8, ease, delay: 0.12 + i * 0.12 } }),
 }
 
-function Stat({ value, suffix, label, decimals = 0, active }: { value: number; suffix?: string; label: React.ReactNode; decimals?: number; active: boolean }) {
-  const v = useCountUp(value, active)
-  return (
-    <motion.div className="stat" variants={fadeUp} custom={4}>
-      <div className="stat__value num">
-        {v.toFixed(decimals)}
-        {suffix && <small>{suffix}</small>}
-      </div>
-      <div className="stat__label">{label}</div>
-    </motion.div>
-  )
-}
-
 export default function Hero() {
-  const metrics = useApp(s => s.metrics)
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.3 })
-  const fps = metrics?.fps.total ?? 24.3
-  const red = metrics?.memory.reduction_2d ?? 29.9
-  const miou = (metrics?.miou ?? 0.747) * 100
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [textHidden, setTextHidden] = useState(false)
+
+  // Scroll progress across the full tall section (200vh)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  // Canvas container transforms driven by scroll
+  // Phase 1 (0→0.35): canvas rises from bottom peek, scales up
+  // Phase 2 (0.35→0.65): canvas fills and overshoots the viewport
+  const canvasScale = useTransform(scrollYProgress, [0, 0.3, 0.6], [0.65, 1.0, 1.5])
+  const canvasY = useTransform(scrollYProgress, [0, 0.3, 0.6], ['18%', '0%', '-20%'])
+  const canvasOpacity = useTransform(scrollYProgress, [0, 0.12], [0.85, 1])
+
+  // Text fades out as user scrolls
+  const textOpacity = useTransform(scrollYProgress, [0, 0.15, 0.28], [1, 0.5, 0])
+  const textY = useTransform(scrollYProgress, [0, 0.28], ['0px', '-60px'])
+
+  // Vignette fades to reveal the canvas fully
+  const vignetteOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0])
+
+  // Track when text should be pointer-events: none
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    setTextHidden(latest > 0.2)
+  })
 
   return (
-    <section id="top" className="hero" data-theme="dark">
-      <HeroCanvas />
-      <div className="hero__vignette" />
-      <motion.div className="hero__content container" initial="hidden" animate="show" ref={ref}>
-        <motion.a href="#live" className="badge" variants={fadeUp} custom={0}>
-          <span className="badge__tag">LIVE</span>
-          Adaptive 2.5D Lidar mapping
-        </motion.a>
-        <motion.h1 className="hero__title" variants={fadeUp} custom={1}>
-          Sharp where it matters.
-          <br />
-          <em>Light</em> where it doesn&apos;t.
-        </motion.h1>
-        <motion.p className="hero__sub" variants={fadeUp} custom={2}>
-          Lidar sweeps become a foveated 2.5D map: 5 cm cells near the car, 50 cm at 100 m, labelled in real time.
-        </motion.p>
-        <motion.div className="hero__cta" variants={fadeUp} custom={3}>
-          <a className="btn btn--primary" href="#live">
-            Open the live map
-            <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </a>
-          <a className="btn btn--ghost" href="#evidence">
-            See the numbers
-          </a>
+    <section ref={sectionRef} id="top" className="hero hero--scroll" data-theme="dark">
+      {/* Sticky viewport that pins while scrolling through 200vh */}
+      <div className="hero__sticky">
+        {/* Canvas container — starts at bottom, scales up on scroll */}
+        <motion.div
+          className="hero__canvas-wrap"
+          style={{
+            scale: canvasScale,
+            y: canvasY,
+            opacity: canvasOpacity,
+          }}
+        >
+          <HeroCanvas />
         </motion.div>
-        <motion.div className="hero__stats" variants={fadeUp} custom={4}>
-          <Stat value={fps} suffix="FPS" decimals={1} active={inView} label={<><b>41 ms</b> end to end</>} />
-          <Stat value={red} suffix="×" decimals={1} active={inView} label={<>less memory than a <b>5 cm</b> grid</>} />
-          <Stat value={miou} suffix="%" decimals={1} active={inView} label={<>mIoU on <b>unseen</b> scenes</>} />
+
+        {/* Vignette — fades out on scroll so canvas is fully revealed */}
+        <motion.div className="hero__vignette" style={{ opacity: vignetteOpacity }} />
+
+        {/* Bottom gradient mask — blends canvas bottom edge */}
+        <div className="hero__bottom-fade" />
+
+        {/* Text content — minimal: title + one CTA */}
+        <motion.div
+          className="hero__content container"
+          initial="hidden"
+          animate="show"
+          style={{
+            opacity: textOpacity,
+            y: textY,
+            pointerEvents: textHidden ? 'none' : 'auto',
+          }}
+        >
+          <motion.h1 className="hero__title" variants={fadeUp} custom={0}>
+            Sharp where it matters.
+            <br />
+            <em>Light</em> where it doesn&apos;t.
+          </motion.h1>
+          <motion.div className="hero__cta" variants={fadeUp} custom={1}>
+            <a className="btn btn--primary" href="#live">
+              Open the live map
+              <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </motion.div>
         </motion.div>
-      </motion.div>
-      <div className="scroll-hint" aria-hidden="true">
-        scroll
-        <span />
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="scroll-hint"
+          aria-hidden="true"
+          style={{ opacity: textOpacity }}
+        >
+          scroll
+          <span />
+        </motion.div>
       </div>
     </section>
   )
