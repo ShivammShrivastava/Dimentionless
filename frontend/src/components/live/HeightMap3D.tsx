@@ -34,6 +34,8 @@ export default function HeightMap3D() {
     renderer.domElement.style.position = 'absolute'
     renderer.domElement.style.inset = '0'
     el.appendChild(renderer.domElement)
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.1
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x0d0d0f)
@@ -53,6 +55,14 @@ export default function HeightMap3D() {
     const sun = new THREE.DirectionalLight(0xffffff, 1.1)
     sun.position.set(30, 60, 20)
     scene.add(sun)
+    // fill light from the front-below for the car body
+    const fill = new THREE.DirectionalLight(0xc8d8f0, 0.4)
+    fill.position.set(-10, 3, -25)
+    scene.add(fill)
+    // rim light from behind
+    const rim = new THREE.DirectionalLight(0xffd4e8, 0.3)
+    rim.position.set(0, 8, 30)
+    scene.add(rim)
 
     const grid = new THREE.GridHelper(200, 40, 0x2a2a30, 0x1c1c20)
     grid.position.y = -0.02
@@ -67,14 +77,162 @@ export default function HeightMap3D() {
       scene.add(new THREE.LineLoop(geo, mat))
     })
 
-    // ego
-    const ego = new THREE.Mesh(new THREE.BoxGeometry(1.9, 1.3, 4.6), new THREE.MeshStandardMaterial({ color: 0xf4f1ea, emissive: 0x3a3a40, roughness: 0.4 }))
-    ego.position.set(0, 0.65, 0)
-    scene.add(ego)
-    const nose = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.4, 4), new THREE.MeshStandardMaterial({ color: 0xff6b9d, emissive: 0xff6b9d, emissiveIntensity: 0.5 }))
-    nose.rotation.x = -Math.PI / 2
-    nose.position.set(0, 0.9, -3.2)
-    scene.add(nose)
+    // ego vehicle – detailed 3D car matching the 2D TopDown glyph
+    const egoGroup = new THREE.Group()
+
+    // ----- body shell (rounded box using ExtrudeGeometry for realism) -----
+    const bodyW = 1.9, bodyH = 1.1, bodyL = 4.6
+    const bodyShape = new THREE.Shape()
+    const br = 0.25 // corner radius
+    bodyShape.moveTo(-bodyW / 2 + br, -bodyL / 2)
+    bodyShape.lineTo(bodyW / 2 - br, -bodyL / 2)
+    bodyShape.quadraticCurveTo(bodyW / 2, -bodyL / 2, bodyW / 2, -bodyL / 2 + br)
+    bodyShape.lineTo(bodyW / 2, bodyL / 2 - br * 1.6)
+    bodyShape.quadraticCurveTo(bodyW / 2, bodyL / 2, bodyW / 2 - br * 1.6, bodyL / 2)
+    bodyShape.lineTo(-bodyW / 2 + br * 1.6, bodyL / 2)
+    bodyShape.quadraticCurveTo(-bodyW / 2, bodyL / 2, -bodyW / 2, bodyL / 2 - br * 1.6)
+    bodyShape.lineTo(-bodyW / 2, -bodyL / 2 + br)
+    bodyShape.quadraticCurveTo(-bodyW / 2, -bodyL / 2, -bodyW / 2 + br, -bodyL / 2)
+
+    const bodyGeo = new THREE.ExtrudeGeometry(bodyShape, { depth: bodyH, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.08, bevelSegments: 3 })
+    bodyGeo.rotateX(-Math.PI / 2) // lay flat
+    bodyGeo.translate(0, bodyH, 0)
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0xf4f1ea, metalness: 0.35, roughness: 0.35,
+      envMapIntensity: 1.2,
+    })
+    const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat)
+    egoGroup.add(bodyMesh)
+
+    // ----- glass: windshield (front) -----
+    const wsGeo = new THREE.BufferGeometry()
+    const wsVerts = new Float32Array([
+      -bodyW * 0.38, bodyH + 0.01, -bodyL * 0.22,
+       bodyW * 0.38, bodyH + 0.01, -bodyL * 0.22,
+       bodyW * 0.32, bodyH + 0.01, -bodyL * 0.06,
+      -bodyW * 0.32, bodyH + 0.01, -bodyL * 0.06,
+    ])
+    wsGeo.setAttribute('position', new THREE.BufferAttribute(wsVerts, 3))
+    wsGeo.setIndex([0, 1, 2, 0, 2, 3])
+    wsGeo.computeVertexNormals()
+    const glassMat = new THREE.MeshStandardMaterial({
+      color: 0x1a1a22, metalness: 0.7, roughness: 0.15,
+      transparent: true, opacity: 0.85,
+    })
+    egoGroup.add(new THREE.Mesh(wsGeo, glassMat))
+
+    // ----- glass: rear window -----
+    const rwGeo = new THREE.BufferGeometry()
+    const rwVerts = new Float32Array([
+      -bodyW * 0.33, bodyH + 0.01, bodyL * 0.24,
+       bodyW * 0.33, bodyH + 0.01, bodyL * 0.24,
+       bodyW * 0.38, bodyH + 0.01, bodyL * 0.36,
+      -bodyW * 0.38, bodyH + 0.01, bodyL * 0.36,
+    ])
+    rwGeo.setAttribute('position', new THREE.BufferAttribute(rwVerts, 3))
+    rwGeo.setIndex([0, 1, 2, 0, 2, 3])
+    rwGeo.computeVertexNormals()
+    egoGroup.add(new THREE.Mesh(rwGeo, glassMat))
+
+    // ----- roof panel -----
+    const roofGeo = new THREE.BoxGeometry(bodyW * 0.68, 0.06, bodyL * 0.3)
+    const roofMat = new THREE.MeshStandardMaterial({ color: 0xd8d3c8, roughness: 0.5, metalness: 0.15 })
+    const roofMesh = new THREE.Mesh(roofGeo, roofMat)
+    roofMesh.position.set(0, bodyH + 0.04, bodyL * 0.09)
+    egoGroup.add(roofMesh)
+
+    // slight raised cabin (gives 3D depth to the glass area)
+    const cabinGeo = new THREE.BoxGeometry(bodyW * 0.7, 0.35, bodyL * 0.42)
+    const cabinMat = new THREE.MeshStandardMaterial({ color: 0x2a2a32, metalness: 0.6, roughness: 0.2, transparent: true, opacity: 0.7 })
+    const cabinMesh = new THREE.Mesh(cabinGeo, cabinMat)
+    cabinMesh.position.set(0, bodyH + 0.16, bodyL * 0.06)
+    egoGroup.add(cabinMesh)
+
+    // ----- wheels (4x) -----
+    const wheelR = 0.32, wheelW2 = 0.18
+    const wheelGeo = new THREE.CylinderGeometry(wheelR, wheelR, wheelW2, 16)
+    wheelGeo.rotateZ(Math.PI / 2)
+    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1f, roughness: 0.8, metalness: 0.1 })
+    const wheelPositions: [number, number, number][] = [
+      [-bodyW / 2 - 0.03, wheelR, -bodyL * 0.3],
+      [bodyW / 2 + 0.03, wheelR, -bodyL * 0.3],
+      [-bodyW / 2 - 0.03, wheelR, bodyL * 0.18],
+      [bodyW / 2 + 0.03, wheelR, bodyL * 0.18],
+    ]
+    for (const pos of wheelPositions) {
+      const w = new THREE.Mesh(wheelGeo, wheelMat)
+      w.position.set(...pos)
+      egoGroup.add(w)
+      // hub cap (small shiny disc)
+      const hubGeo = new THREE.CylinderGeometry(wheelR * 0.55, wheelR * 0.55, wheelW2 + 0.02, 12)
+      hubGeo.rotateZ(Math.PI / 2)
+      const hubMat = new THREE.MeshStandardMaterial({ color: 0x555560, metalness: 0.8, roughness: 0.2 })
+      const hub = new THREE.Mesh(hubGeo, hubMat)
+      hub.position.set(...pos)
+      egoGroup.add(hub)
+    }
+
+    // ----- side mirrors -----
+    const mirrorGeo = new THREE.BoxGeometry(0.22, 0.12, 0.1)
+    const mirrorMat = new THREE.MeshStandardMaterial({ color: 0x2b2b30, roughness: 0.5 })
+    const mirrorL = new THREE.Mesh(mirrorGeo, mirrorMat)
+    mirrorL.position.set(-bodyW / 2 - 0.12, bodyH * 0.85, -bodyL * 0.2)
+    egoGroup.add(mirrorL)
+    const mirrorR = new THREE.Mesh(mirrorGeo, mirrorMat)
+    mirrorR.position.set(bodyW / 2 + 0.12, bodyH * 0.85, -bodyL * 0.2)
+    egoGroup.add(mirrorR)
+
+    // ----- headlights (lime, matching #D4FC79) -----
+    const hlGeo = new THREE.BoxGeometry(bodyW * 0.22, 0.12, 0.08)
+    const hlMat = new THREE.MeshStandardMaterial({ color: 0xd4fc79, emissive: 0xd4fc79, emissiveIntensity: 0.8, roughness: 0.3 })
+    const hlL = new THREE.Mesh(hlGeo, hlMat)
+    hlL.position.set(-bodyW / 2 + bodyW * 0.19, bodyH * 0.55, -bodyL / 2 + 0.06)
+    egoGroup.add(hlL)
+    const hlR = new THREE.Mesh(hlGeo, hlMat)
+    hlR.position.set(bodyW / 2 - bodyW * 0.19, bodyH * 0.55, -bodyL / 2 + 0.06)
+    egoGroup.add(hlR)
+
+    // headlight glow (point lights)
+    const hlGlowL = new THREE.PointLight(0xd4fc79, 0.6, 8)
+    hlGlowL.position.set(-bodyW * 0.3, bodyH * 0.55, -bodyL / 2 - 0.3)
+    egoGroup.add(hlGlowL)
+    const hlGlowR = new THREE.PointLight(0xd4fc79, 0.6, 8)
+    hlGlowR.position.set(bodyW * 0.3, bodyH * 0.55, -bodyL / 2 - 0.3)
+    egoGroup.add(hlGlowR)
+
+    // ----- taillights (coral, matching #FF6B9D) -----
+    const tlGeo = new THREE.BoxGeometry(bodyW * 0.22, 0.12, 0.08)
+    const tlMat = new THREE.MeshStandardMaterial({ color: 0xff6b9d, emissive: 0xff6b9d, emissiveIntensity: 0.6, roughness: 0.3 })
+    const tlL = new THREE.Mesh(tlGeo, tlMat)
+    tlL.position.set(-bodyW / 2 + bodyW * 0.19, bodyH * 0.55, bodyL / 2 - 0.06)
+    egoGroup.add(tlL)
+    const tlR = new THREE.Mesh(tlGeo, tlMat)
+    tlR.position.set(bodyW / 2 - bodyW * 0.19, bodyH * 0.55, bodyL / 2 - 0.06)
+    egoGroup.add(tlR)
+
+    // ----- heading chevron (pink triangle pointing forward, like the 2D version) -----
+    const chevGeo = new THREE.BufferGeometry()
+    const chevH = 0.7
+    const chevVerts = new Float32Array([
+      0, bodyH * 0.5, -bodyL / 2 - chevH * 2,
+      -bodyW * 0.28, bodyH * 0.5, -bodyL / 2 - 0.06,
+       bodyW * 0.28, bodyH * 0.5, -bodyL / 2 - 0.06,
+    ])
+    chevGeo.setAttribute('position', new THREE.BufferAttribute(chevVerts, 3))
+    chevGeo.computeVertexNormals()
+    const chevMat = new THREE.MeshStandardMaterial({ color: 0xff6b9d, emissive: 0xff6b9d, emissiveIntensity: 0.7, side: THREE.DoubleSide })
+    egoGroup.add(new THREE.Mesh(chevGeo, chevMat))
+
+    // ----- subtle ground shadow -----
+    const shadowGeo = new THREE.PlaneGeometry(bodyW * 1.3, bodyL * 1.1)
+    shadowGeo.rotateX(-Math.PI / 2)
+    const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35 })
+    const shadow = new THREE.Mesh(shadowGeo, shadowMat)
+    shadow.position.set(0, 0.01, 0)
+    egoGroup.add(shadow)
+
+    scene.add(egoGroup)
+    const ego = egoGroup
 
     const geometry = new THREE.BoxGeometry(1, 1, 1)
     const material = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.05, wireframe: settings.wireframe })
@@ -116,7 +274,11 @@ export default function HeightMap3D() {
       material.dispose()
       scene.traverse(o => {
         const mesh = o as THREE.Mesh
-        if (mesh.geometry && mesh !== (ego as THREE.Mesh)) mesh.geometry.dispose?.()
+        if (mesh.geometry) mesh.geometry.dispose?.()
+        if (mesh.material) {
+          const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+          mats.forEach(m => m.dispose?.())
+        }
       })
       renderer.dispose()
       el.removeChild(renderer.domElement)
