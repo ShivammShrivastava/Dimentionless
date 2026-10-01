@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from avr_lidar.config import DEFAULT_RINGS, NUM_CLASSES
-from avr_lidar.grid.varres_grid import EMPTY_CM, VarResGrid
+from ml.config import DEFAULT_RINGS, NUM_CLASSES
+from ml.grid.varres_grid import EMPTY_CM, VarResGrid
 
 
 @pytest.fixture

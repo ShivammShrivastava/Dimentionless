@@ -11,10 +11,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from avr_lidar.config import CLASS_COLORS_HEX, CLASS_NAMES, RESULTS_DIR  # noqa: E402
-from avr_lidar.data.nuscenes_loader import NuScenesMini  # noqa: E402
-from avr_lidar.data.range_projection import project as range_project, unproject  # noqa: E402
-from avr_lidar.grid.varres_grid import VarResGrid  # noqa: E402
+from ml.config import CLASS_COLORS_HEX, CLASS_NAMES, RESULTS_DIR  # noqa: E402
+from ml.data.nuscenes_loader import NuScenesMini  # noqa: E402
+from ml.data.range_projection import project as range_project, unproject  # noqa: E402
+from ml.grid.varres_grid import VarResGrid  # noqa: E402
 
 
 def hex_to_rgb(h: str) -> tuple[int, int, int]:

@@ -14,8 +14,8 @@ import zlib
 import msgpack
 import numpy as np
 
-from avr_lidar.grid.varres_grid import GridFrame, RingLayer
-from avr_lidar.pipeline.infer import PipelineOutput
+from ml.grid.varres_grid import GridFrame, RingLayer
+from pipeline.infer import PipelineOutput
 
 
 def _le(a: np.ndarray) -> bytes:

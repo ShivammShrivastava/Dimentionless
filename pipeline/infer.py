@@ -15,11 +15,11 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from avr_lidar.config import CHECKPOINT_PATH
-from avr_lidar.data.nuscenes_loader import Frame
-from avr_lidar.data.range_projection import project as range_project, unproject
-from avr_lidar.grid.varres_grid import GridFrame, VarResGrid
-from avr_lidar.model.salsanext_lite import SalsaNextLite
+from ml.config import CHECKPOINT_PATH
+from ml.data.nuscenes_loader import Frame
+from ml.data.range_projection import project as range_project, unproject
+from ml.grid.varres_grid import GridFrame, VarResGrid
+from dl.salsanext_lite import SalsaNextLite
 
 
 @dataclass

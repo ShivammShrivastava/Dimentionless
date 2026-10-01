@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from avr_lidar.config import IGNORE_INDEX, NUM_CLASSES
+from ml.config import IGNORE_INDEX, NUM_CLASSES
 
 
 def lovasz_grad(gt_sorted: torch.Tensor) -> torch.Tensor:

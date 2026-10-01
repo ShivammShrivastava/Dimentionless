@@ -12,8 +12,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from avr_lidar.config import NUM_CLASSES
-from avr_lidar.data.range_projection import NUM_CHANNELS
+from ml.config import NUM_CLASSES
+from ml.data.range_projection import NUM_CHANNELS
 
 
 class ResContextBlock(nn.Module):

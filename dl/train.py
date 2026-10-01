@@ -1,6 +1,6 @@
 """Train SalsaNext-lite on nuScenes-mini range images.
 
-Usage:  python -m avr_lidar.model.train --epochs 60 --batch 8
+Usage:  python -m dl.train --epochs 60 --batch 8
 """
 
 from __future__ import annotations
@@ -15,14 +15,14 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # dl → root
 
-from avr_lidar.config import CHECKPOINT_PATH, CLASS_NAMES, RESULTS_DIR  # noqa: E402
-from avr_lidar.data.nuscenes_loader import NuScenesMini  # noqa: E402
-from avr_lidar.eval.metrics import SegmentationMeter  # noqa: E402
-from avr_lidar.model.dataset import RangeViewDataset  # noqa: E402
-from avr_lidar.model.losses import SegLoss, inverse_log_frequency_weights  # noqa: E402
-from avr_lidar.model.salsanext_lite import SalsaNextLite, count_params  # noqa: E402
+from ml.config import CHECKPOINT_PATH, CLASS_NAMES, RESULTS_DIR  # noqa: E402
+from ml.data.nuscenes_loader import NuScenesMini  # noqa: E402
+from ml.eval.metrics import SegmentationMeter  # noqa: E402
+from dl.dataset import RangeViewDataset  # noqa: E402
+from dl.losses import SegLoss, inverse_log_frequency_weights  # noqa: E402
+from dl.salsanext_lite import SalsaNextLite, count_params  # noqa: E402
 
 
 @torch.no_grad()

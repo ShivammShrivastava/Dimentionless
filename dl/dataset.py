@@ -13,9 +13,9 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from avr_lidar.config import NUM_CLASSES
-from avr_lidar.data.nuscenes_loader import NuScenesMini
-from avr_lidar.data.range_projection import CH_MEAN, CH_STD, project
+from ml.config import NUM_CLASSES
+from ml.data.nuscenes_loader import NuScenesMini
+from ml.data.range_projection import CH_MEAN, CH_STD, project
 
 _X, _Y = 1, 2  # channel indices of x and y in the range image
 

@@ -1,6 +1,6 @@
 """FastAPI backend: REST + WebSocket streaming of 2.5D grid frames.
 
-Run:  python -m uvicorn avr_lidar.server.app:app --host 0.0.0.0 --port 8000
+Run:  python -m uvicorn backend.app:app --host 0.0.0.0 --port 8000
 Env:  AVR_USE_GT=1 to serve ground-truth labels instead of model predictions.
 """
 
@@ -17,13 +17,13 @@ from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnec
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # backend → root
 
-from avr_lidar.config import CHECKPOINT_PATH, CLASS_COLORS_HEX, CLASS_NAMES, METRICS_PATH  # noqa: E402
-from avr_lidar.data.nuscenes_loader import NuScenesMini  # noqa: E402
-from avr_lidar.pipeline.infer import Pipeline  # noqa: E402
-from avr_lidar.server.codec import encode, encode_points  # noqa: E402
-from avr_lidar.server.upload import router as upload_router, set_pipe as upload_set_pipe  # noqa: E402
+from ml.config import CHECKPOINT_PATH, CLASS_COLORS_HEX, CLASS_NAMES, METRICS_PATH  # noqa: E402
+from ml.data.nuscenes_loader import NuScenesMini  # noqa: E402
+from pipeline.infer import Pipeline  # noqa: E402
+from backend.codec import encode, encode_points  # noqa: E402
+from backend.upload import router as upload_router, set_pipe as upload_set_pipe  # noqa: E402
 
 app = FastAPI(title="Adaptive Variable-Resolution 2.5D Lidar Mapping", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -112,7 +112,7 @@ async def points(scene: str, idx: int, max: int = Query(20000, ge=100, le=200000
 @app.get("/api/metrics")
 def metrics():
     if not METRICS_PATH.exists():
-        raise HTTPException(404, "metrics.json not found; run python -m avr_lidar.eval.benchmark")
+        raise HTTPException(404, "metrics.json not found; run python -m ml.eval.benchmark")
     return JSONResponse(json.loads(METRICS_PATH.read_text()))
 
 

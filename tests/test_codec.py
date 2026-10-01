@@ -1,10 +1,10 @@
 import numpy as np
 
-from avr_lidar.config import NUM_CLASSES
-from avr_lidar.data.nuscenes_loader import Frame
-from avr_lidar.grid.varres_grid import VarResGrid
-from avr_lidar.pipeline.infer import PipelineOutput
-from avr_lidar.server.codec import decode, encode, encode_points
+from ml.config import NUM_CLASSES
+from ml.data.nuscenes_loader import Frame
+from ml.grid.varres_grid import VarResGrid
+from pipeline.infer import PipelineOutput
+from backend.codec import decode, encode, encode_points
 
 
 def _synthetic_output(n=30_000, seed=0):

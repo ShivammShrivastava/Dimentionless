@@ -19,10 +19,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from avr_lidar.config import CHECKPOINT_PATH, CLASS_COLORS_HEX, CLASS_NAMES, METRICS_PATH, PROJECT_ROOT  # noqa: E402
-from avr_lidar.data.nuscenes_loader import NuScenesMini  # noqa: E402
-from avr_lidar.pipeline.infer import Pipeline  # noqa: E402
-from avr_lidar.server.codec import encode  # noqa: E402
+from ml.config import CHECKPOINT_PATH, CLASS_COLORS_HEX, CLASS_NAMES, METRICS_PATH, PROJECT_ROOT  # noqa: E402
+from ml.data.nuscenes_loader import NuScenesMini  # noqa: E402
+from pipeline.infer import Pipeline  # noqa: E402
+from backend.codec import encode  # noqa: E402
 
 
 def main() -> None:

@@ -5,37 +5,46 @@ Deep-learning pipeline that turns raw nuScenes Lidar sweeps into a **foveated 2.
 elevation, semantic class (drivable / non-drivable terrain / static obstacle / dynamic object)
 and confidence. ~30× less memory than a uniform 5 cm 2D grid, ~450× less than uniform 5 cm 3D voxels.
 
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for the design and
-[FRONTEND_PROMPT.md](FRONTEND_PROMPT.md) for the dashboard specification / API contract.
+See [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) for the design and
+[docs/FRONTEND_PROMPT.md](docs/FRONTEND_PROMPT.md) for the dashboard specification / API contract.
 
 ## Layout
 
 ```
-avr_lidar/
-  config.py                 ring spec, class names, paths
-  data/nuscenes_loader.py   devkit-free nuScenes-mini loader (JSON metadata)
-  data/class_map.py         32 nuScenes classes -> 5 project classes
-  data/range_projection.py  point cloud <-> 32x1024 range image
-  grid/varres_grid.py       VarResGrid: square Chebyshev rings, vectorised projection
-  model/salsanext_lite.py   4.6M-param range-view U-Net
-  model/losses.py           weighted CE + Lovasz-softmax
-  model/dataset.py          cached range-image dataset with augmentation
-  model/train.py            training loop (AMP, OneCycle)
-  pipeline/infer.py         frame -> labels -> grid, per-stage timing
-  eval/metrics.py           IoU, accuracy by distance
-  eval/benchmark.py         writes results/metrics.json
-  server/app.py             FastAPI REST + WebSocket
-  server/codec.py           zlib+msgpack wire format
-scripts/verify_frame.py     phase-0 sanity check + PNGs
-scripts/export_mock_frames.py  offline frames for frontend dev
-tests/                      grid + codec unit tests
+frontend/                     Vite + React 18 + TypeScript dashboard
+backend/                      FastAPI REST + WebSocket server
+  app.py                      main server application
+  codec.py                    zlib+msgpack wire format
+  upload.py                   file upload endpoint
+  requirements.txt            Python dependencies
+  conftest.py                 pytest configuration
+ml/                           Machine learning: data pipeline, grid, evaluation
+  config.py                   ring spec, class names, paths
+  grid/varres_grid.py         VarResGrid: square Chebyshev rings, vectorised projection
+  eval/metrics.py             IoU, accuracy by distance
+  eval/benchmark.py           writes results/metrics.json
+dl/                           Deep learning: model, training, losses
+  salsanext_lite.py           4.6M-param range-view U-Net
+  losses.py                   weighted CE + Lovász-softmax
+  dataset.py                  cached range-image dataset with augmentation
+  train.py                    training loop (AMP, OneCycle)
+pipeline/                     End-to-end inference pipeline
+  infer.py                    frame → labels → grid, per-stage timing
+scripts/                      Utility scripts
+  verify_frame.py             phase-0 sanity check + PNGs
+  export_mock_frames.py       offline frames for frontend dev
+  make_figures.py             generate report figures
+tests/                        grid + codec unit tests
+data/mock_frames/             offline demo data for frontend
+results/                      training results, figures, metrics
+docs/                         documentation & presentations
 ```
 
 ## Setup
 
 ```powershell
 pip install torch --index-url https://download.pytorch.org/whl/cu128
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 New-Item -ItemType Directory -Force data\nuscenes
 tar -xf "C:\path\to\v1.0-mini.tar" -C data\nuscenes
 tar -xf "C:\path\to\nuScenes-lidarseg-mini-v1.0.tar" -C data\nuscenes   # second: adds lidarseg/ and lidarseg.json
@@ -46,9 +55,9 @@ python -m pytest tests -q
 ## Train, benchmark, serve
 
 ```powershell
-python -m avr_lidar.model.train --epochs 60 --batch 8          # ~15 min on an 8 GB laptop GPU
-python -m avr_lidar.eval.benchmark --split val                  # -> results/metrics.json
-python -m uvicorn avr_lidar.server.app:app --host 0.0.0.0 --port 8000
+python -m dl.train --epochs 60 --batch 8                       # ~15 min on an 8 GB laptop GPU
+python -m ml.eval.benchmark --split val                        # → results/metrics.json
+python -m uvicorn backend.app:app --host 0.0.0.0 --port 8000
 ```
 
 Open `http://localhost:8000/docs` for the REST schema. WebSocket: `ws://localhost:8000/ws/stream?scene=scene-0061&fps=10`.
@@ -60,7 +69,7 @@ Set `AVR_USE_GT=1` to serve ground-truth labels (no model needed).
 python scripts\export_mock_frames.py --scenes scene-0061 scene-0103 --stride 2
 ```
 
-Copy `mock_frames/` to the frontend's `public/mock/`.
+Copy `data/mock_frames/` to the frontend's `public/mock/`.
 
 ## Coordinate frame
 
@@ -77,7 +86,7 @@ z = 0 at the ego ground plane. Rings are keyed on Chebyshev distance `max(|x|, |
 | Memory vs uniform 5 cm 2D / 3D | 29.9× / 449× less |
 
 Figures: `results/fig_qualitative.png`, `results/fig_accuracy_by_distance.png`, `results/fig_memory.png`, `results/fig_latency.png`.
-Full numbers: `results/metrics.json`. Details and deviations: IMPLEMENTATION_PLAN.md §7.
+Full numbers: `results/metrics.json`. Details and deviations: docs/IMPLEMENTATION_PLAN.md §7.
 
 ## Frontend (dashboard)
 
@@ -86,8 +95,8 @@ It streams frames from the backend over the WebSocket and falls back to the expo
 `frontend/public/mock/` when the backend is unreachable (and upgrades to live automatically when it appears).
 
 ```powershell
-python -m uvicorn avr_lidar.server.app:app --host 127.0.0.1 --port 8000   # terminal 1
-cd frontend; npm install; npm run dev                                         # terminal 2 -> http://127.0.0.1:5173
+python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000   # terminal 1
+cd frontend; npm install; npm run dev                              # terminal 2 → http://127.0.0.1:5173
 ```
 
 - `VITE_API_URL` (default `http://127.0.0.1:8000`), `VITE_MOCK=true` forces demo mode.

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from avr_lidar.config import CLASS_NAMES, DISTANCE_BINS, IGNORE_INDEX, NUM_CLASSES
+from ml.config import CLASS_NAMES, DISTANCE_BINS, IGNORE_INDEX, NUM_CLASSES
 
 
 class SegmentationMeter:

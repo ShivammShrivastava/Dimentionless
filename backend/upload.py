@@ -16,9 +16,9 @@ import numpy as np
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from fastapi.responses import Response
 
-from avr_lidar.grid.varres_grid import VarResGrid
-from avr_lidar.pipeline.infer import Pipeline, PipelineOutput
-from avr_lidar.server.codec import encode
+from ml.grid.varres_grid import VarResGrid
+from pipeline.infer import Pipeline, PipelineOutput
+from backend.codec import encode
 
 router = APIRouter()
 

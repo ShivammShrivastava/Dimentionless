@@ -8,9 +8,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from avr_lidar.config import CLASS_COLORS_HEX, CLASS_NAMES, METRICS_PATH, RESULTS_DIR, DISTANCE_BINS
-from avr_lidar.data.nuscenes_loader import NuScenesMini
-from avr_lidar.pipeline.infer import Pipeline
+from ml.config import CLASS_COLORS_HEX, CLASS_NAMES, METRICS_PATH, RESULTS_DIR, DISTANCE_BINS
+from ml.data.nuscenes_loader import NuScenesMini
+from pipeline.infer import Pipeline
 
 cmap = ListedColormap(CLASS_COLORS_HEX)
 nusc = NuScenesMini(); pipe = Pipeline()

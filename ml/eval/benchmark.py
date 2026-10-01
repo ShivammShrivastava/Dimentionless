@@ -3,7 +3,7 @@
 Accuracy metrics are computed on the val split (the model never saw it);
 latency and memory metrics over every frame.
 
-Usage: python -m avr_lidar.eval.benchmark [--split val|all]
+Usage: python -m ml.eval.benchmark [--split val|all]
 """
 
 from __future__ import annotations
@@ -16,14 +16,14 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))  # ml/eval → root
 
-from avr_lidar.config import CLASS_NAMES, METRICS_PATH, RESULTS_DIR  # noqa: E402
-from avr_lidar.data.nuscenes_loader import NuScenesMini  # noqa: E402
-from avr_lidar.eval.metrics import SegmentationMeter  # noqa: E402
-from avr_lidar.grid.varres_grid import VarResGrid  # noqa: E402
-from avr_lidar.pipeline.infer import Pipeline  # noqa: E402
-from avr_lidar.server.codec import encode  # noqa: E402
+from ml.config import CLASS_NAMES, METRICS_PATH, RESULTS_DIR  # noqa: E402
+from ml.data.nuscenes_loader import NuScenesMini  # noqa: E402
+from ml.eval.metrics import SegmentationMeter  # noqa: E402
+from ml.grid.varres_grid import VarResGrid  # noqa: E402
+from pipeline.infer import Pipeline  # noqa: E402
+from backend.codec import encode  # noqa: E402
 
 
 def main() -> None:

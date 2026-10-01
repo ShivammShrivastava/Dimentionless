@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from avr_lidar.config import (
+from ml.config import (
     DEFAULT_RINGS,
     NUM_CLASSES,
     UNIFORM_BASELINE_CELL_M,

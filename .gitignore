@@ -1,5 +1,5 @@
 # ---------- Dataset (4 GB, download separately) ----------
-data/
+data/nuscenes/
 *.tar
 *.pcd.bin
 *_lidarseg.bin
@@ -37,7 +37,7 @@ frontend/coverage/
 npm-debug.log*
 yarn-error.log*
 
-# mock_frames/ and frontend/public/mock/ are tracked on purpose (8 MB demo data)
+# data/mock_frames/ and frontend/public/mock/ are tracked on purpose (8 MB demo data)
 
 # ---------- Editors / OS ----------
 .vscode/
