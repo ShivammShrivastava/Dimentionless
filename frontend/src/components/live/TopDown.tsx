@@ -281,10 +281,10 @@ export default function TopDown({ fit }: { fit: FitRequest }) {
               <span className="tooltip__badge-icon">{sub?.icon ?? '○'}</span>
               <div>
                 <div className="tooltip__badge-name" style={{ color }}>
-                  {sub?.name ?? 'Empty cell'}
+                  {sub?.name ?? 'Open Road'}
                 </div>
                 <div className="tooltip__badge-cat">
-                  {hover.count ? CLASS_LABELS[hover.label] : 'No points in this cell'}
+                  {hover.count ? CLASS_LABELS[hover.label] : 'No obstacles detected'}
                 </div>
               </div>
             </div>
