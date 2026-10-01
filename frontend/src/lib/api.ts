@@ -140,5 +140,16 @@ export async function fetchPoints(scene: string, idx: number, max = 20000): Prom
   return decodePoints(await getBuffer(`${API_URL}/api/scenes/${scene}/frames/${idx}/points?max=${max}`))
 }
 
+export async function uploadPointCloud(file: File): Promise<ArrayBuffer> {
+  const form = new FormData()
+  form.append('file', file)
+  const res = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: form })
+  if (!res.ok) {
+    const text = await res.text().catch(() => res.statusText)
+    throw new Error(text || `Upload failed (${res.status})`)
+  }
+  return await res.arrayBuffer()
+}
+
 export const streamUrl = (scene: string, fps: number) =>
   `${WS_URL}/ws/stream?scene=${encodeURIComponent(scene)}&fps=${fps}`

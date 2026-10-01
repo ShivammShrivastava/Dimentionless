@@ -14,6 +14,7 @@ export function Logo({ size = 22 }: { size?: number }) {
 const LINKS = [
   ['Overview', '#top'],
   ['Live map', '#live'],
+  ['Upload', '#upload'],
   ['Evidence', '#evidence'],
   ['Foveation', '#foveation'],
   ['Pipeline', '#pipeline'],

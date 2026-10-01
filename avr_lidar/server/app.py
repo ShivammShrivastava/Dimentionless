@@ -23,9 +23,11 @@ from avr_lidar.config import CHECKPOINT_PATH, CLASS_COLORS_HEX, CLASS_NAMES, MET
 from avr_lidar.data.nuscenes_loader import NuScenesMini  # noqa: E402
 from avr_lidar.pipeline.infer import Pipeline  # noqa: E402
 from avr_lidar.server.codec import encode, encode_points  # noqa: E402
+from avr_lidar.server.upload import router as upload_router, set_pipe as upload_set_pipe  # noqa: E402
 
 app = FastAPI(title="Adaptive Variable-Resolution 2.5D Lidar Mapping", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.include_router(upload_router)
 
 _nusc: NuScenesMini | None = None
 _pipe: Pipeline | None = None
@@ -44,6 +46,7 @@ def pipe() -> Pipeline:
     if _pipe is None:
         use_gt = os.environ.get("AVR_USE_GT", "0") == "1" or not CHECKPOINT_PATH.exists()
         _pipe = Pipeline(use_gt=use_gt)
+        upload_set_pipe(_pipe)
     return _pipe
 
 

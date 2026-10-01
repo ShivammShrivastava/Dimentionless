@@ -45,6 +45,8 @@ export interface AppState {
   settings: Settings
   pinned: CellRef | null
   error: string | null
+  /** Non-null when viewing an uploaded point cloud instead of streaming data */
+  uploadedFile: string | null
 }
 
 const initial: AppState = {
@@ -72,6 +74,7 @@ const initial: AppState = {
   },
   pinned: null,
   error: null,
+  uploadedFile: null,
 }
 
 type Listener = () => void
@@ -184,7 +187,7 @@ export const actions = {
   step: (d: number) => player?.step(d),
   setFps: (fps: number) => player?.setFps(fps),
   setScene: (name: string) => {
-    store.set({ pinned: null })
+    store.set({ pinned: null, uploadedFile: null })
     player?.setScene(name)
   },
   setSettings: (p: Partial<Settings>) => store.set(s => ({ settings: { ...s.settings, ...p } })),
@@ -197,4 +200,24 @@ export const actions = {
   pin: (c: CellRef | null) => store.set({ pinned: c }),
   switchMode: (m: Mode) => void initApp(m),
   retry: () => void initApp(),
+
+  /** Inject an uploaded point cloud frame into the live map. */
+  injectUpload: (frame: GridFrame, fileName: string) => {
+    player?.pause()
+    const dense = pool.densify(frame)
+    store.set(s => ({
+      frame,
+      dense,
+      frameSeq: s.frameSeq + 1,
+      uploadedFile: fileName,
+      pinned: null,
+      history: [],
+    }))
+  },
+
+  /** Clear the uploaded frame and resume normal playback. */
+  clearUpload: () => {
+    store.set({ uploadedFile: null, pinned: null })
+    player?.play()
+  },
 }

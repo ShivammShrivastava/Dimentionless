@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import LiveMap from './components/live/LiveMap'
+import Upload from './components/Upload'
 import Evidence from './components/Evidence'
 import Foveation from './components/Foveation'
 import Pipeline from './components/Pipeline'
@@ -19,6 +20,7 @@ export default function App() {
       <main>
         <Hero />
         <LiveMap />
+        <Upload />
         <Evidence />
         <Foveation />
         <Pipeline />

@@ -75,6 +75,8 @@ export default function LiveMap() {
     return () => window.removeEventListener('keydown', onKey)
   }, [settings.wireframe])
 
+  const uploadedFile = useApp(s => s.uploadedFile)
+
   const scene = scenes.find(s => s.name === player?.scene)
 
   return (
@@ -89,6 +91,21 @@ export default function LiveMap() {
         </motion.div>
 
         <motion.div className="dash" initial={{ opacity: 0, y: 40, scale: 0.985 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 1, ease }}>
+          {/* Uploaded file banner */}
+          {uploadedFile && (
+            <div className="dash__upload-banner">
+              <div className="dash__upload-banner-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" strokeWidth="2.5">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Viewing uploaded file: <b>{uploadedFile}</b></span>
+              </div>
+              <button className="mini-btn" onClick={() => actions.clearUpload()} style={{ background: 'rgba(255,255,255,0.08)' }}>
+                ✕ Resume playback
+              </button>
+            </div>
+          )}
+
           <div className="dash__toolbar">
             <div className="tabs" role="tablist">
               {TABS.map(([k, label]) => (
@@ -99,15 +116,17 @@ export default function LiveMap() {
               ))}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <select className="select" value={player?.scene ?? ''} onChange={e => actions.setScene(e.target.value)} aria-label="Scene">
-                {scenes.map(s => (
-                  <option key={s.name} value={s.name}>
-                    {s.name} · {s.split} · {s.num_frames} frames
-                  </option>
-                ))}
-              </select>
+              {!uploadedFile && (
+                <select className="select" value={player?.scene ?? ''} onChange={e => actions.setScene(e.target.value)} aria-label="Scene">
+                  {scenes.map(s => (
+                    <option key={s.name} value={s.name}>
+                      {s.name} · {s.split} · {s.num_frames} frames
+                    </option>
+                  ))}
+                </select>
+              )}
               <span className="hint" title={scene?.description}>
-                {mode === 'live' ? `model predictions · ${health?.device ?? 'gpu'}` : mode === 'mock' ? 'model predictions · exported frames' : 'connecting'}
+                {uploadedFile ? 'user upload · grid projection' : mode === 'live' ? `model predictions · ${health?.device ?? 'gpu'}` : mode === 'mock' ? 'model predictions · exported frames' : 'connecting'}
               </span>
             </div>
           </div>
