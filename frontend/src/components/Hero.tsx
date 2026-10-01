@@ -102,7 +102,7 @@ function HeroCanvas() {
     const par = { x: 0, y: 0 }
 
     const resize = () => {
-      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const dpr = window.devicePixelRatio || 1
       const r = canvas.getBoundingClientRect()
       w = r.width
       h = r.height
@@ -148,8 +148,8 @@ function HeroCanvas() {
         [40, '20 cm cells', 0.15],
         [100, '50 cm cells', 0.1],
       ]
-      ctx.lineWidth = 1
-      ctx.font = '500 11px Inter, system-ui, sans-serif'
+      ctx.lineWidth = 1.2
+      ctx.font = '600 12px Inter, system-ui, sans-serif'
       ctx.textBaseline = 'bottom'
       for (const [d, label, a] of rings) {
         const s = d * ppm
@@ -175,7 +175,8 @@ function HeroCanvas() {
         ctx.beginPath()
         ctx.moveTo(cx, cy)
         ctx.lineTo(cx + Math.cos(a0 - Math.PI / 2) * R, cy + Math.sin(a0 - Math.PI / 2) * R)
-        ctx.strokeStyle = 'rgba(212,252,121,0.45)'
+        ctx.lineWidth = 1.5
+        ctx.strokeStyle = 'rgba(212,252,121,0.5)'
         ctx.stroke()
       }
 
@@ -194,9 +195,9 @@ function HeroCanvas() {
         const [sx, sy] = toScreen(p.x, p.y)
         if (sx < -4 || sy < -4 || sx > w + 4 || sy > h + 4) continue
         const c = rgb[p.cls]
-        const size = p.cls === 4 ? 3 : 2.1
+        const size = p.cls === 4 ? 3.8 : 2.8
         ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${bright})`
-        ctx.fillRect(sx - size / 2, sy - size / 2, size, size)
+        ctx.fillRect(Math.round(sx - size / 2), Math.round(sy - size / 2), size, size)
       }
 
       // ego
