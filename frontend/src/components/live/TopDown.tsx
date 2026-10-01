@@ -6,6 +6,29 @@ import { CELL_LABELS, EMPTY_CM, cellCenter, worldToCell, type CellRef } from '..
 import { actions, useApp } from '../../store/app'
 import { RingPainter, drawCellHighlight, drawEgo, drawGrid, drawRingOutlines, drawSweep, screenToWorld, type View } from './render'
 
+/** Infer a specific object sub-type from label + height for richer tooltip display */
+function inferSubtype(label: number, zMaxCm: number, zMinCm: number, pointCount: number): { name: string; desc: string; icon: string } {
+  const heightM = zMaxCm === EMPTY_CM ? 0 : (zMaxCm - Math.max(zMinCm, -20)) / 100
+  switch (label) {
+    case 1: // drivable
+      return { name: 'Road / Lane', desc: 'Drivable ground surface — safe for navigation.', icon: '🛣️' }
+    case 2: // terrain_nondrivable
+      return heightM > 0.15
+        ? { name: 'Raised Terrain', desc: 'Elevated non-drivable ground — curb or embankment.', icon: '⛰️' }
+        : { name: 'Non-drivable Terrain', desc: 'Sidewalk, grass or off-road surface.', icon: '🌿' }
+    case 3: // static_obstacle
+      if (heightM > 3.5) return { name: 'Building / Facade', desc: 'Tall static structure — building wall or facade.', icon: '🏢' }
+      if (heightM > 1.5) return { name: 'Wall / Barrier', desc: 'Vertical static obstacle — wall, fence or barrier.', icon: '🧱' }
+      if (heightM > 0.8 && pointCount < 25) return { name: 'Pole / Sign', desc: 'Narrow vertical object — lamppost, traffic sign or pole.', icon: '🚦' }
+      return { name: 'Static Obstacle', desc: 'Stationary object blocking the path.', icon: '⛔' }
+    case 4: // dynamic_object
+      if (heightM > 1.2) return { name: 'Vehicle', desc: 'Moving vehicle detected — car, truck or bus.', icon: '🚗' }
+      return { name: 'Pedestrian / Cyclist', desc: 'Moving person or cyclist in the scene.', icon: '🚶' }
+    default:
+      return { name: 'Unknown', desc: 'No classification available.', icon: '❓' }
+  }
+}
+
 export interface FitRequest {
   radius: number
   nonce: number
@@ -246,40 +269,66 @@ export default function TopDown({ fit }: { fit: FitRequest }) {
   return (
     <div ref={wrap} className={`dash__view ${grabbing ? 'is-grabbing' : ''}`} style={{ position: 'relative', width: '100%', height: '100%' }}>
       <canvas ref={canvasRef} />
-      {hover && (
-        <div className="tooltip" style={{ left: tipLeft, top: tipTop }}>
-          <div className="tooltip__title">
-            <span className="swatch" style={{ background: hover.count ? palette[hover.label] : 'transparent', boxShadow: hover.count ? 'none' : 'inset 0 0 0 1.5px rgba(233,238,248,0.5)' }} />
-            {hover.count ? CLASS_LABELS[hover.label] : 'Empty cell'}
-          </div>
-          <div className="tooltip__grid">
-            <span>ring</span>
-            <b>
-              {hover.cell.ring} · {CELL_LABELS[hover.cell.ring]}
-            </b>
-            <span>cell (i, j)</span>
-            <b>
-              {hover.cell.i}, {hover.cell.j}
-            </b>
-            <span>world x, y</span>
-            <b>
-              {hover.x.toFixed(2)}, {hover.y.toFixed(2)} m
-            </b>
-            {hover.count > 0 && (
-              <>
-                <span>height max / min</span>
-                <b>
-                  {hover.zMax === EMPTY_CM ? '–' : (hover.zMax / 100).toFixed(2)} / {hover.zMin === EMPTY_CM ? '–' : (hover.zMin / 100).toFixed(2)} m
-                </b>
-                <span>points</span>
-                <b>{fmtInt(hover.count)}</b>
-                <span>confidence</span>
-                <b>{Math.round((hover.conf / 255) * 100)}%</b>
-              </>
+      {hover && (() => {
+        const sub = hover.count > 0 ? inferSubtype(hover.label, hover.zMax, hover.zMin, hover.count) : null
+        const color = hover.count ? palette[hover.label] : 'rgba(233,238,248,0.3)'
+        const confPct = Math.round((hover.conf / 255) * 100)
+        const heightM = hover.zMax !== EMPTY_CM ? (hover.zMax / 100).toFixed(2) : null
+        return (
+          <div className="tooltip tooltip--rich" style={{ left: tipLeft, top: tipTop, minWidth: 224 }}>
+            {/* Class badge */}
+            <div className="tooltip__badge" style={{ borderColor: color }}>
+              <span className="tooltip__badge-icon">{sub?.icon ?? '○'}</span>
+              <div>
+                <div className="tooltip__badge-name" style={{ color }}>
+                  {sub?.name ?? 'Empty cell'}
+                </div>
+                <div className="tooltip__badge-cat">
+                  {hover.count ? CLASS_LABELS[hover.label] : 'No points in this cell'}
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            {sub && (
+              <p className="tooltip__desc">{sub.desc}</p>
             )}
+
+            {/* Confidence bar */}
+            {hover.count > 0 && (
+              <div className="tooltip__conf">
+                <div className="tooltip__conf-label">
+                  <span>Confidence</span>
+                  <b style={{ color }}>{confPct}%</b>
+                </div>
+                <div className="tooltip__conf-track">
+                  <div className="tooltip__conf-fill" style={{ width: `${confPct}%`, background: color }} />
+                </div>
+              </div>
+            )}
+
+            {/* Stats grid */}
+            <div className="tooltip__grid" style={{ marginTop: 8 }}>
+              <span>Distance</span>
+              <b>{Math.hypot(hover.x, hover.y).toFixed(1)} m from ego</b>
+              {heightM && (
+                <>
+                  <span>Height</span>
+                  <b>{heightM} m</b>
+                </>
+              )}
+              <span>Resolution</span>
+              <b>Ring {hover.cell.ring} · {CELL_LABELS[hover.cell.ring]}</b>
+              {hover.count > 0 && (
+                <>
+                  <span>Points</span>
+                  <b>{fmtInt(hover.count)} in cell</b>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
     </div>
   )
 }
