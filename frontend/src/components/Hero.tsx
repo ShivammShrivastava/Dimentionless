@@ -201,7 +201,7 @@ function HeroCanvas() {
 
       // ego
       const [ex, ey] = toScreen(0, 0)
-      drawCar(ctx, ex, ey, 4.6 * ppm, 1.9 * ppm, 0.55)
+      drawCar(ctx, ex, ey, 6.5 * ppm, 2.7 * ppm, 0.60)
     }
     raf = requestAnimationFrame(draw)
     return () => {

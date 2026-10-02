@@ -283,8 +283,8 @@ export function drawRingOutlines(ctx: CanvasRenderingContext2D, v: View, rings: 
 
 export function drawEgo(ctx: CanvasRenderingContext2D, v: View) {
   // nuScenes ego: lidar sits ~0.9 m behind the front axle; draw the body centred slightly behind the origin
-  const L = Math.max(14, 4.6 * v.scale)
-  const W = Math.max(7, 1.9 * v.scale)
+  const L = Math.max(20, 6.5 * v.scale)
+  const W = Math.max(10, 2.7 * v.scale)
   drawCar(ctx, v.cx, v.cy + L * 0.05, L, W)
 }
 
