@@ -104,19 +104,8 @@ export default function Upload() {
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 1, ease }}
         >
-          {mode !== 'live' && state === 'idle' && !uploadedFile && (
-            <div className="upload__notice">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 8v4M12 16h.01" />
-              </svg>
-              <span>
-                Upload requires the backend to be running. Currently in <b>demo mode</b> — start the server with{' '}
-                <code>uvicorn avr_lidar.server.app:app</code> and{' '}
-                <button className="upload__retry" onClick={() => window.location.reload()}>reload</button>.
-              </span>
-            </div>
-          )}
+
+
 
           {/* Success banner: currently showing uploaded data */}
           <AnimatePresence>
