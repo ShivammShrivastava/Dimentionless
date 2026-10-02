@@ -41,7 +41,7 @@ CLASS_NAMES: list[str] = [
 NUM_CLASSES = len(CLASS_NAMES)
 IGNORE_INDEX = 0
 
-CLASS_COLORS_HEX: list[str] = ["#1a1a1a", "#3b82f6", "#22c55e", "#a3a3a3", "#ef4444"]
+CLASS_COLORS_HEX: list[str] = ["#050608", "#00BFFF", "#39FF14", "#FF8C00", "#FF2020"]
 
 # Distance bins (metres, Euclidean xy) used for accuracy-vs-distance reporting.
 DISTANCE_BINS: list[tuple[float, float]] = [(0, 10), (10, 20), (20, 40), (40, 100)]

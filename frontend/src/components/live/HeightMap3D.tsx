@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { PALETTE_CB, PALETTE_DEFAULT, heightFactor } from '../../lib/colors'
+import { PALETTE_CB, PALETTE_DEFAULT, thermalColor } from '../../lib/colors'
 import { useApp } from '../../store/app'
 
 /**
@@ -38,8 +38,8 @@ export default function HeightMap3D() {
     renderer.toneMappingExposure = 1.1
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0d0d0f)
-    scene.fog = new THREE.Fog(0x0d0d0f, 90, 260)
+    scene.background = new THREE.Color(0x060709)
+    scene.fog = new THREE.Fog(0x060709, 100, 280)
 
     const camera = new THREE.PerspectiveCamera(50, el.clientWidth / Math.max(1, el.clientHeight), 0.1, 600)
     camera.position.set(0, 95, 130)
@@ -324,7 +324,7 @@ export default function HeightMap3D() {
     scene.add(egoGroup)
 
     const geometry = new THREE.BoxGeometry(1, 1, 1)
-    const material = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.05, wireframe: settings.wireframe })
+    const material = new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0.20, wireframe: settings.wireframe })
     const meshes: THREE.InstancedMesh[] = []
     three.current = { renderer, scene, camera, controls, meshes, material, geometry }
 
@@ -381,7 +381,8 @@ export default function HeightMap3D() {
     const T = three.current
     if (!T || !frame || !dense) return
     T.material.wireframe = settings.wireframe
-    const palette = (settings.cbPalette ? PALETTE_CB : PALETTE_DEFAULT).map(h => new THREE.Color(h))
+    // Class palette is still used for legend / layer toggles; but 3D coloring is thermal
+    const classPalette = (settings.cbPalette ? PALETTE_CB : PALETTE_DEFAULT).map(h => new THREE.Color(h))
     const dummy = new THREE.Object3D()
     const color = new THREE.Color()
     const ex = settings.exaggeration
@@ -416,14 +417,37 @@ export default function HeightMap3D() {
         const wy = -half + (j + 0.5) * cell
         const zMin = d.zMin[p] / 100
         const zMax = d.zMax[p] / 100
-        const h = Math.max(0.04, (zMax - zMin) * ex)
-        dummy.position.set(-wy, zMin * ex + h / 2, -wx)
-        dummy.scale.set(cell * 0.96, h, cell * 0.96)
-        dummy.updateMatrix()
-        mesh.setMatrixAt(n, dummy.matrix)
-        color.copy(palette[label])
-        if (settings.heightShade) color.multiplyScalar(heightFactor(d.zMax[p]) * 0.9)
-        mesh.setColorAt(n, color)
+
+        if (label === 1) {
+          // ── DRIVABLE ROAD: solid flat ground tile ───────────────────────
+          // Position at ground level, thick enough to be clearly visible
+          const roadH = 0.5
+          dummy.position.set(-wy, roadH / 2, -wx)  // sit right on the ground plane
+          dummy.scale.set(cell * 1.05, roadH, cell * 1.05)  // overlap cells so no gaps
+          dummy.updateMatrix()
+          mesh.setMatrixAt(n, dummy.matrix)
+
+          // Saturated blue with distance-based brightness (like LiDAR intensity)
+          const dist = Math.sqrt(wx * wx + wy * wy)
+          const f = 0.5 + 0.5 * Math.min(1, dist / 50)
+          color.setRGB(0.02 * f, 0.35 * f, 1.0 * f)
+          mesh.setColorAt(n, color)
+        } else {
+          // ── ALL OTHER CLASSES: thermal height gradient ──────────────────
+          const h = Math.max(0.04, (zMax - zMin) * ex)
+          dummy.position.set(-wy, zMin * ex + h / 2, -wx)
+          dummy.scale.set(cell * 0.96, h, cell * 0.96)
+          dummy.updateMatrix()
+          mesh.setMatrixAt(n, dummy.matrix)
+
+          if (settings.heightShade) {
+            const [tr, tg, tb] = thermalColor(d.zMax[p])
+            color.setRGB(tr / 255, tg / 255, tb / 255)
+          } else {
+            color.copy(classPalette[label])
+          }
+          mesh.setColorAt(n, color)
+        }
         n++
       }
       mesh.count = n
