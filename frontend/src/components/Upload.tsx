@@ -11,7 +11,6 @@ type UploadState = 'idle' | 'dragging' | 'uploading' | 'error'
 const ACCEPT = '.bin,.pcd'
 
 export default function Upload() {
-  const mode = useApp(s => s.mode)
   const uploadedFile = useApp(s => s.uploadedFile)
   const [state, setState] = useState<UploadState>('idle')
   const [progress, setProgress] = useState('')
