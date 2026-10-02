@@ -232,7 +232,6 @@ export default function HeightMap3D() {
     egoGroup.add(shadow)
 
     scene.add(egoGroup)
-    const ego = egoGroup
 
     const geometry = new THREE.BoxGeometry(1, 1, 1)
     const material = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.05, wireframe: settings.wireframe })

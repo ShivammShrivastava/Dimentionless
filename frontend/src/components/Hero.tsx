@@ -2,7 +2,6 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-mot
 import { useEffect, useRef, useState } from 'react'
 import { drawCar } from '../lib/car'
 import { PALETTE_DEFAULT, hexToRgb } from '../lib/colors'
-import { useApp } from '../store/app'
 
 /* ------------------------------------------------------------------ canvas */
 interface Pt {
