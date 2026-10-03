@@ -220,70 +220,130 @@ export default function Foveation() {
   const hi = Math.log10(rows[2][1] as number)
 
   return (
-    <section id="foveation" className="section section--light" data-theme="light">
-      <div className="container grid-2">
-        <div>
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.8, ease }}>
-            <span className="eyebrow">Foveation</span>
-            <h2 className="h2">
-              Resolution that follows <em>distance</em>.
-            </h2>
-            <p className="lead">Fine cells where safety needs them, coarse cells where range needs them. Every cell keeps a height and a label.</p>
-          </motion.div>
-          <motion.ul className="list" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}>
-            {[
-              ['Terrain analysis', 'Drivable versus non-drivable, with confidence.'],
-              ['Object detection', 'Static structure in white, moving objects in coral.'],
-              ['Adaptive grid', 'Four square rings. No cell straddles a boundary.'],
-            ].map(([t, d], i) => (
-              <motion.li key={t} variants={{ hidden: { opacity: 0, x: -18 }, show: { opacity: 1, x: 0, transition: { duration: 0.6, ease } } }}>
-                <span className="list__num">{i + 1}</span>
-                <div>
-                  <b>{t}</b>
-                  <span>{d}</span>
-                </div>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </div>
+    <section
+      id="foveation"
+      className="section section--light"
+      data-theme="light"
+      style={{ padding: 'clamp(16px, 2.5vh, 32px) 0', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+    >
+      <div className="container">
+        {/* Compact header */}
+        <motion.div
+          className="section__head"
+          style={{ marginBottom: 'clamp(10px, 1.5vh, 18px)' }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease }}
+        >
+          <span className="eyebrow">Foveation</span>
+          <h2 className="h2" style={{ fontSize: 'clamp(1.35rem, 2.2vw, 1.9rem)' }}>
+            Resolution that follows <em>distance</em>.
+          </h2>
+          <p className="lead" style={{ fontSize: '0.82rem', marginTop: 4 }}>
+            Concentric rings scale cell size with range. Hover or drag to inspect adaptive cell resolution.
+          </p>
+        </motion.div>
 
-        <motion.div className="fov" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease, delay: 0.1 }}>
-          <div className="fov__canvas-wrap">
+        {/* 2-Column Side-by-Side: Canvas on left, Controls on right */}
+        <motion.div
+          className="fov-layout"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.7, ease, delay: 0.05 }}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(260px, 360px) minmax(320px, 1fr)',
+            gap: 'clamp(16px, 2.5vw, 28px)',
+            alignItems: 'center',
+          }}
+        >
+          <div
+            className="fov__canvas-wrap"
+            style={{
+              aspectRatio: '1 / 1',
+              width: '100%',
+              maxHeight: 'clamp(240px, 36vh, 340px)',
+              margin: '0 auto',
+            }}
+          >
             <LensCanvas dist={dist} onDist={d => setDist(d)} />
-            <div className="fov__tip">
+            <div className="fov__tip" style={{ fontSize: '11px', padding: '5px 9px' }}>
               Hover or drag · lens shows <b>true cell size</b>
             </div>
           </div>
-          <div className="fov__controls">
-            <input className="range" type="range" min={0} max={99.5} step={0.5} value={dist} onChange={e => setDist(parseFloat(e.target.value))} aria-label="Distance from sensor" />
-            <div className="readout">
-              <span>
-                Distance <b className="num">{dist.toFixed(1)} m</b>
-              </span>
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span key={ring} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease }}>
-                  Ring {ring} · <b className="num">{CELL_LABELS[ring]}</b> cells · {fmtInt(perM2)} per m²
-                </motion.span>
-              </AnimatePresence>
+
+          <div
+            className="card"
+            style={{
+              padding: '14px 18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+            }}
+          >
+            <div>
+              <input
+                className="range"
+                type="range"
+                min={0}
+                max={99.5}
+                step={0.5}
+                value={dist}
+                onChange={e => setDist(parseFloat(e.target.value))}
+                aria-label="Distance from sensor"
+              />
+              <div className="readout" style={{ marginTop: 6, fontSize: '12px' }}>
+                <span>
+                  Distance <b className="num">{dist.toFixed(1)} m</b>
+                </span>
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={ring}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25, ease }}
+                  >
+                    Ring {ring} · <b className="num">{CELL_LABELS[ring]}</b> cells · {fmtInt(perM2)} / m²
+                  </motion.span>
+                </AnimatePresence>
+              </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginTop: 6 }}>
-              <span style={{ fontSize: 13, color: 'var(--ink-2)' }}>Same 200 m × 200 m coverage</span>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginTop: 2 }}>
+              <span style={{ fontSize: 12, color: 'var(--ink-2)' }}>Same 200 m × 200 m coverage</span>
               <div className="segmented" role="tablist">
                 {(['memory', 'cells'] as const).map(m => (
-                  <button key={m} className={metric === m ? 'is-active' : ''} onClick={() => setMetric(m)} role="tab" aria-selected={metric === m}>
-                    {metric === m && <motion.span layoutId="fov-seg" className="seg-bg" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+                  <button
+                    key={m}
+                    className={metric === m ? 'is-active' : ''}
+                    onClick={() => setMetric(m)}
+                    role="tab"
+                    aria-selected={metric === m}
+                    style={{ padding: '4px 12px', fontSize: '12px' }}
+                  >
+                    {metric === m && (
+                      <motion.span
+                        layoutId="fov-seg"
+                        className="seg-bg"
+                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                      />
+                    )}
                     <span>{m === 'memory' ? 'Memory' : 'Cells'}</span>
                   </button>
                 ))}
               </div>
             </div>
-            <div className="bars">
+
+            <div className="bars" style={{ gap: 7 }}>
               {rows.map(([label, v, txt, color]) => {
                 const pct = Math.max(6, ((Math.log10(v as number) - lo) / (hi - lo)) * 100)
                 return (
-                  <div className="bar" key={label as string}>
+                  <div className="bar" key={label as string} style={{ fontSize: '12px' }}>
                     <span style={{ color: 'var(--ink-2)' }}>{label}</span>
-                    <div className="bar__track">
+                    <div className="bar__track" style={{ height: 8 }}>
                       <motion.div
                         className="bar__fill"
                         style={{ background: color as string, width: `${pct}%` }}
@@ -294,15 +354,15 @@ export default function Foveation() {
                         layout
                       />
                     </div>
-                    <span className="bar__val">{txt}</span>
+                    <span className="bar__val num" style={{ fontSize: '12px' }}>{txt}</span>
                   </div>
                 )
               })}
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
-                <span className="callout">
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 2 }}>
+                <span className="callout" style={{ fontSize: '11px', padding: '4px 9px' }}>
                   {(metrics?.memory.reduction_2d ?? 29.9).toFixed(1)}× <span style={{ color: '#E9EEF8', fontWeight: 500 }}>vs uniform 2D</span>
                 </span>
-                <span className="callout">
+                <span className="callout" style={{ fontSize: '11px', padding: '4px 9px' }}>
                   {Math.round(metrics?.memory.reduction_3d ?? 449)}× <span style={{ color: '#E9EEF8', fontWeight: 500 }}>vs uniform 3D</span>
                 </span>
               </div>

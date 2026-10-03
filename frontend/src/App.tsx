@@ -7,6 +7,7 @@ import Evidence from './components/Evidence'
 import Foveation from './components/Foveation'
 import Pipeline from './components/Pipeline'
 import Footer from './components/Footer'
+import HorizontalSlider from './components/HorizontalSlider'
 import { initApp } from './store/app'
 
 export default function App() {
@@ -21,9 +22,9 @@ export default function App() {
         <Hero />
         <LiveMap />
         <Upload />
-        <Evidence />
-        <Foveation />
-        <Pipeline />
+        <HorizontalSlider labels={['Evidence', 'Foveation', 'Pipeline']}>
+          {[<Evidence key="evidence" />, <Foveation key="foveation" />, <Pipeline key="pipeline" />]}
+        </HorizontalSlider>
       </main>
       <Footer />
     </>

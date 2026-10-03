@@ -660,3 +660,77 @@ canvas { display: block; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- Horizontal slider panels ---------- */
+/*
+ * Each panel is 100vw × 100vh. The .section inside fills 100% of
+ * that height and centers its content vertically.
+ */
+.h-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+.h-panel > .section {
+  flex: 1 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 860px) {
+  .fov-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Progress pills that sit fixed in the corner while the slider is active */
+.h-slider-progress {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 40;
+  pointer-events: none;
+}
+.h-slider-progress__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line-2);
+  transition: background var(--d) var(--ease-out), transform var(--d) var(--ease-out);
+}
+.h-slider-progress__dot.is-active {
+  background: var(--lime);
+  transform: scale(1.4);
+}
+
+/* Slide-in label that appears at the start of the horizontal section */
+.h-slider-hint {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-3);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  z-index: 40;
+  pointer-events: none;
+}
+.h-slider-hint span {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(var(--coral), transparent);
+  animation: drip 1.8s var(--ease-inout) infinite;
+}
