@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="nav__brand" style={{ color: '#E9EEF8' }}>
           <Logo />
           <span>Foveated Lidar</span>
-          <span style={{ opacity: 0.5, fontWeight: 400 }}>· Adaptive variable-resolution 2.5D mapping</span>
+          <span className="footer__sub" style={{ opacity: 0.5, fontWeight: 400 }}>· Adaptive variable-resolution 2.5D mapping</span>
         </div>
         <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
           <span>nuScenes-mini · SalsaNext-lite · FastAPI · React</span>
