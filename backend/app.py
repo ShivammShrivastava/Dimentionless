@@ -15,6 +15,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse, Response
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # backend → root
@@ -26,7 +27,43 @@ from backend.codec import encode, encode_points  # noqa: E402
 from backend.upload import router as upload_router, set_pipe as upload_set_pipe  # noqa: E402
 
 app = FastAPI(title="Adaptive Variable-Resolution 2.5D Lidar Mapping", version="0.1.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+# Disable interactive docs/schema in production (set AVR_DEBUG=1 to re-enable).
+_DEBUG = os.environ.get("AVR_DEBUG", "0") == "1"
+if not _DEBUG:
+    app.docs_url = app.redoc_url = app.openapi_url = None
+
+# Comma-separated allowlists via env; defaults are local dev only.
+ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.environ.get("AVR_ALLOWED_ORIGINS", "http://127.0.0.1:5173,http://localhost:5173").split(",")
+    if o.strip()
+]
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.environ.get("AVR_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    if h.strip()
+]
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+    expose_headers=["X-Content-Compression", "X-Points-Count"],
+)
+
+
+@app.middleware("http")
+async def security_headers(request, call_next):
+    resp = await call_next(request)
+    resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+    resp.headers.setdefault("X-Frame-Options", "DENY")
+    resp.headers.setdefault("Referrer-Policy", "no-referrer")
+    resp.headers.setdefault("Cross-Origin-Resource-Policy", "same-site")
+    resp.headers.setdefault("Cache-Control", "no-store")
+    return resp
+
+
 app.include_router(upload_router)
 
 _nusc: NuScenesMini | None = None
@@ -119,18 +156,38 @@ def metrics():
 # ----------------------------------------------------------------- WebSocket
 @app.websocket("/ws/stream")
 async def stream(ws: WebSocket, scene: str = "scene-0061", fps: float = 10.0, compress: bool = False):
+    # Browsers don't apply CORS to WebSockets: validate Origin to block cross-site hijacking.
+    origin = ws.headers.get("origin")
+    if origin is not None and origin not in ALLOWED_ORIGINS:
+        await ws.close(code=1008)
+        return
     await ws.accept()
     n = nusc()
     if scene not in n.scenes:
-        await ws.close(code=4004, reason=f"unknown scene {scene}")
+        await ws.close(code=4004, reason="unknown scene")
         return
+    fps = fps if fps == fps else 10.0  # NaN guard
     state = {"scene": scene, "idx": 0, "playing": True, "fps": max(0.5, min(fps, 30.0))}
 
     async def reader():
         try:
             while True:
-                msg = json.loads(await ws.receive_text())
-                cmd = msg.get("cmd")
+                raw = await ws.receive_text()
+                if len(raw) > 1024:
+                    await ws.close(code=1009)
+                    state["closed"] = True
+                    return
+                try:
+                    msg = json.loads(raw)
+                    if not isinstance(msg, dict):
+                        continue
+                    cmd = msg.get("cmd")
+                    if cmd == "seek":
+                        int(msg.get("idx", 0))
+                    elif cmd == "fps":
+                        float(msg.get("value", 10))
+                except (ValueError, TypeError, OverflowError):
+                    continue
                 if cmd == "play":
                     state["playing"] = True
                 elif cmd == "pause":

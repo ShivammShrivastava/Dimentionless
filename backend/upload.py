@@ -8,6 +8,7 @@ Supported formats:
 
 from __future__ import annotations
 
+import logging
 import struct
 import tempfile
 from pathlib import Path
@@ -21,6 +22,11 @@ from pipeline.infer import Pipeline, PipelineOutput
 from backend.codec import encode
 
 router = APIRouter()
+
+log = logging.getLogger("avr.upload")
+
+MAX_UPLOAD_BYTES = 50 * 1024 * 1024  # 50 MB
+MAX_POINTS = 2_000_000
 
 _grid = VarResGrid()
 
@@ -62,9 +68,15 @@ def _parse_pcd(data: bytes) -> tuple[np.ndarray, np.ndarray]:
     if 'POINTS' not in header:
         raise ValueError("PCD file missing POINTS header field")
     
-    n_points = int(header['POINTS'])
-    if n_points == 0:
-        raise ValueError("PCD file has 0 points")
+    try:
+        n_points = int(header['POINTS'])
+    except ValueError:
+        raise ValueError("Invalid POINTS header")
+    if n_points <= 0:
+        raise ValueError("PCD file has no points")
+    if n_points > MAX_POINTS:
+        raise ValueError(f"Too many points (max {MAX_POINTS})")
+
     
     # Figure out field layout
     fields = header.get('FIELDS', 'x y z').split()
@@ -79,7 +91,7 @@ def _parse_pcd(data: bytes) -> tuple[np.ndarray, np.ndarray]:
         point_lines = lines[data_line_idx:]
         coords = []
         intensity = []
-        for pl in point_lines:
+        for pl in point_lines[:MAX_POINTS]:
             pl = pl.strip()
             if not pl:
                 continue
@@ -94,6 +106,9 @@ def _parse_pcd(data: bytes) -> tuple[np.ndarray, np.ndarray]:
         # Parse SIZE and TYPE to compute byte stride
         sizes = list(map(int, header.get('SIZE', '4 4 4').split()))
         types = header.get('TYPE', 'F F F').split()
+        if (len(sizes) != len(fields) or len(types) != len(fields)
+                or any(s <= 0 or s > 16 for s in sizes)):
+            raise ValueError("Inconsistent PCD SIZE/TYPE/FIELDS headers")
         stride = sum(sizes)
         body = b'\n'.join(lines[data_line_idx:])
         if len(body) < stride * n_points:
@@ -196,24 +211,44 @@ async def upload_point_cloud(file: UploadFile = File(...)):
             f"Unsupported file format '{ext}'. Please upload a .bin (nuScenes/KITTI) or .pcd file."
         )
     
-    data = await file.read()
+    # Read in chunks and abort as soon as the cap is exceeded (don't buffer unbounded input).
+    declared = file.size
+    if declared is not None and declared > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, f"File too large (max {MAX_UPLOAD_BYTES // (1024 * 1024)} MB)")
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > MAX_UPLOAD_BYTES:
+            raise HTTPException(413, f"File too large (max {MAX_UPLOAD_BYTES // (1024 * 1024)} MB)")
+        chunks.append(chunk)
+    data = b"".join(chunks)
     if len(data) == 0:
         raise HTTPException(400, "Empty file")
-    if len(data) > 200 * 1024 * 1024:  # 200 MB limit
-        raise HTTPException(413, "File too large (max 200 MB)")
     
     try:
         xyz, intensity = parse_point_cloud(file.filename, data)
-    except ValueError as e:
-        raise HTTPException(400, str(e))
-    
+    except (ValueError, struct.error, IndexError, UnicodeDecodeError):
+        raise HTTPException(400, "Malformed or unsupported point cloud file")
+
     if xyz.shape[0] < 10:
         raise HTTPException(400, f"Point cloud has only {xyz.shape[0]} points — too few to process")
-    
+    if xyz.shape[0] > MAX_POINTS:
+        raise HTTPException(413, f"Too many points (max {MAX_POINTS})")
+    if not np.isfinite(xyz).all():
+        keep = np.isfinite(xyz).all(axis=1)
+        xyz, intensity = xyz[keep], intensity[keep]
+        if xyz.shape[0] < 10:
+            raise HTTPException(400, "Too few finite points")
+
     try:
         buf = process_upload(xyz, intensity, _pipe_ref)  # type: ignore
-    except Exception as e:
-        raise HTTPException(500, f"Processing error: {e}")
+    except Exception:
+        log.exception("upload processing failed")
+        raise HTTPException(500, "Processing error")
     
     return Response(
         content=buf,
